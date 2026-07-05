@@ -1,0 +1,2400 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta property="og:title"       content="O Pequeno Carteiro das Nuvens — Dormistória"/>
+<meta property="og:description" content="Uma história infantil encantadora para a hora de dormir 🌙"/>
+<meta property="og:image"       content="capa.png"/>
+<meta property="og:type"        content="website"/>
+<meta name="twitter:card"       content="summary_large_image"/>
+<meta name="twitter:image"      content="capa.png"/>
+<link rel="icon"            type="image/png" href="../../../../favicon.png"/>
+<link rel="apple-touch-icon"               href="../../../../favicon.png"/>
+<title>O Pequeno Carteiro das Nuvens — Dormistória</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --rose:#FDE8E8;
+    --peach:#FDDBC7;
+    --sky:#C8E8F5;
+    --cloud:#F0F8FF;
+    --lilac:#EDE0F5;
+    --gold:#FFF0C0;
+    --sage:#D8EDD8;
+    --dusk:#D8D0EE;
+    --night:#C0D8F0;
+    --cream:#FFF8F0;
+    --text-dark:#3D2B1F;
+    --text-mid:#5C4033;
+    --text-soft:#7A5C4A;
+    --white:#FFFFFF;
+  }
+  html,body{width:100%;height:100%;overflow:hidden;background:#2A1F3D;font-family:'Nunito',sans-serif}
+  #app{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+  #book{
+    position:relative;
+    width:100%;
+    max-width:430px;
+    height:100%;
+    max-height:932px;
+    overflow:hidden;
+    border-radius:0;
+    box-shadow:0 0 60px rgba(0,0,0,0.5);
+  }
+  @media(min-width:500px){
+    #book{border-radius:24px;max-height:860px}
+  }
+  .page{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    opacity:0;
+    pointer-events:none;
+    overflow:hidden;
+    transform:translateX(0);
+    visibility:hidden;
+  }
+  .page.active{
+    opacity:1;
+    pointer-events:all;
+    transform:translateX(0);
+    visibility:visible;
+  }
+  .page.slide-from-right{transform:translateX(100%);visibility:visible;opacity:1}
+  .page.slide-from-left{transform:translateX(-100%);visibility:visible;opacity:1}
+  .page.slide-out-left{transform:translateX(-100%);visibility:visible;opacity:1;transition:transform 0.38s ease}
+  .page.slide-out-right{transform:translateX(100%);visibility:visible;opacity:1;transition:transform 0.38s ease}
+  .page.slide-in{transform:translateX(0)!important;visibility:visible;opacity:1;transition:transform 0.38s ease}
+
+  /* SVG illustrations */
+  .illustration{flex-shrink:0;width:100%;position:relative;overflow:hidden}
+  .illustration svg{width:100%;height:100%;display:block}
+
+  /* Text areas */
+  .text-box{
+    padding:20px 24px 24px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  .text-box p em{
+    font-style:italic;
+    color:#4A60C0;
+  }
+  .text-box p{
+    font-family:'Nunito',sans-serif;
+    font-size:clamp(19px,5vw,24px);
+    line-height:1.75;
+    color:var(--text-dark);
+    font-weight:700;
+  }
+  .text-overlay{
+    position:absolute;
+    bottom:0;left:0;right:0;
+    padding:16px 20px 28px;
+  }
+  .text-overlay p{
+    font-family:'Nunito',sans-serif;
+    font-size:clamp(18px,4.8vw,23px);
+    line-height:1.75;
+    font-weight:700;
+    text-align:center;
+  }
+  .bubble{
+    background:rgba(255,255,255,0.92);
+    border-radius:20px;
+    padding:16px 20px;
+    backdrop-filter:blur(6px);
+  }
+  .bubble p, .bubble-dark p{
+    font-size:clamp(18px,4.8vw,23px) !important;
+    line-height:1.75 !important;
+  }
+  .bubble-dark{
+    background:rgba(50,35,60,0.78);
+    border-radius:20px;
+    padding:16px 20px;
+  }
+  .bubble-dark p{color:#F5EAF8;font-weight:700}
+
+  /* Tap zones left/right for navigation */
+  .tap-prev, .tap-next{
+    position:fixed;
+    top:50%;
+    transform:translateY(-50%);
+    width:48px;
+    height:64px;
+    z-index:50;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .tap-prev{left:8px;}
+  .tap-next{right:8px;}
+  .tap-arrow{
+    width:44px;height:44px;
+    background:rgba(255,255,255,0.55);
+    border:2px solid rgba(255,255,255,0.8);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    opacity:1;
+    transition:background 0.15s, transform 0.1s;
+    box-shadow:0 2px 10px rgba(0,0,0,0.25);
+  }
+  .tap-prev:active .tap-arrow,
+  .tap-next:active .tap-arrow{
+    background:rgba(255,255,255,0.85);
+    transform:scale(0.92);
+  }
+  .tap-arrow svg{width:22px;height:22px;stroke:#2A1F3D;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Cover */
+  #page-0{background:linear-gradient(160deg,#1A0A2E 0%,#2D1B52 50%,#0D2040 100%)}
+  #page-0 .cover-content{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    padding:30px 24px;
+    text-align:center;
+  }
+  #page-0 h1{
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(34px,9vw,48px);
+    color:#FFE8A0;
+    text-shadow:0 2px 20px rgba(255,200,80,0.5);
+    line-height:1.2;
+    margin-top:20px;
+  }
+  #page-0 .subtitle{
+    font-family:'Nunito',sans-serif;
+    font-size:clamp(15px,4vw,19px);
+    color:#C8AAEE;
+    margin-top:12px;
+    font-weight:700;
+  }
+
+  /* Progress dots */
+  #dots{
+    position:fixed;bottom:14px;left:50%;transform:translateX(-50%);
+    display:flex;gap:5px;z-index:100;
+    opacity:0.5;
+    pointer-events:none;
+  }
+  .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4);transition:background 0.3s,transform 0.3s}
+  .dot.active{background:rgba(255,255,255,0.9);transform:scale(1.3)}
+
+  /* Download button */
+  #dl-btn{
+    position:fixed;bottom:36px;right:16px;
+    background:rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.3);
+    color:#fff;
+    border-radius:50px;
+    padding:8px 14px;
+    font-size:12px;
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    display:flex;align-items:center;gap:6px;
+    cursor:pointer;
+    z-index:200;
+    backdrop-filter:blur(6px);
+    transition:opacity 0.3s;
+  }
+  #dl-btn:hover{background:rgba(255,255,255,0.28)}
+  #dl-btn svg{width:14px;height:14px}
+  #dl-close{
+    position:fixed;bottom:36px;right:16px;
+    background:rgba(0,0,0,0.25);
+    border:none;color:rgba(255,255,255,0.5);
+    border-radius:50%;width:22px;height:22px;
+    font-size:11px;cursor:pointer;
+    display:none;align-items:center;justify-content:center;
+    z-index:201;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+<div id="book">
+
+<!-- PAGE 0: CAPA -->
+<div class="page active" id="page-0">
+<svg viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+  <defs>
+    <radialGradient id="bg0" cx="50%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#3A2268"/>
+      <stop offset="60%" stop-color="#1E1048"/>
+      <stop offset="100%" stop-color="#080618"/>
+    </radialGradient>
+    <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFF8D0" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#FFF8D0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="430" height="932" fill="url(#bg0)"/>
+  <!-- moon glow halo -->
+  <circle cx="215" cy="195" r="150" fill="url(#moonGlow)"/>
+  <!-- moon body -->
+  <circle cx="215" cy="195" r="88" fill="#FFF8D0" opacity="0.92"/>
+  <circle cx="215" cy="195" r="82" fill="#FFFCE0"/>
+  <!-- moon craters subtle -->
+  <circle cx="190" cy="175" r="10" fill="#F5EAB0" opacity="0.5"/>
+  <circle cx="240" cy="210" r="7" fill="#F5EAB0" opacity="0.4"/>
+  <circle cx="205" cy="218" r="5" fill="#F5EAB0" opacity="0.35"/>
+  <!-- stars — many more, varied sizes -->
+  <circle cx="35" cy="55" r="2" fill="#FFE8A0" opacity="0.95"/>
+  <circle cx="72" cy="88" r="1.2" fill="#FFE8A0" opacity="0.7"/>
+  <circle cx="108" cy="38" r="1.8" fill="#FFF0C0" opacity="0.85"/>
+  <circle cx="155" cy="62" r="1" fill="#C8AAEE" opacity="0.7"/>
+  <circle cx="190" cy="28" r="2.2" fill="#FFE8A0" opacity="0.9"/>
+  <circle cx="240" cy="45" r="1.5" fill="#FFE8A0" opacity="0.75"/>
+  <circle cx="278" cy="22" r="1" fill="#C8AAEE" opacity="0.65"/>
+  <circle cx="310" cy="58" r="2" fill="#FFE8A0" opacity="0.85"/>
+  <circle cx="360" cy="35" r="1.5" fill="#FFE8A0" opacity="0.8"/>
+  <circle cx="400" cy="72" r="1.2" fill="#C8AAEE" opacity="0.65"/>
+  <circle cx="418" cy="130" r="1.8" fill="#FFE8A0" opacity="0.75"/>
+  <circle cx="50" cy="170" r="1.5" fill="#FFE8A0" opacity="0.6"/>
+  <circle cx="22" cy="240" r="1" fill="#C8AAEE" opacity="0.55"/>
+  <circle cx="406" cy="200" r="2" fill="#FFE8A0" opacity="0.7"/>
+  <circle cx="88" cy="305" r="1.2" fill="#FFE8A0" opacity="0.5"/>
+  <circle cx="350" cy="280" r="1.5" fill="#C8AAEE" opacity="0.55"/>
+  <circle cx="420" cy="340" r="1" fill="#FFE8A0" opacity="0.45"/>
+  <circle cx="18" cy="380" r="1.5" fill="#FFE8A0" opacity="0.4"/>
+  <!-- shooting star -->
+  <line x1="320" y1="95" x2="350" y2="115" stroke="#FFE8A0" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="318" cy="94" r="2.5" fill="#FFF0C0" opacity="0.8"/>
+  <!-- big fluffy cloud — more layered, richer -->
+  <ellipse cx="215" cy="460" rx="168" ry="115" fill="#EDE0F5"/>
+  <ellipse cx="110" cy="495" rx="105" ry="78" fill="#EDE0F5"/>
+  <ellipse cx="330" cy="482" rx="108" ry="82" fill="#EDE0F5"/>
+  <ellipse cx="215" cy="440" rx="120" ry="70" fill="#F5F0FF"/>
+  <ellipse cx="145" cy="465" rx="75" ry="55" fill="#F5F0FF"/>
+  <ellipse cx="290" cy="460" rx="78" ry="57" fill="#F5F0FF"/>
+  <!-- small cloud puffs decorative -->
+  <ellipse cx="60" cy="380" rx="55" ry="30" fill="#EDE0F5" opacity="0.5"/>
+  <ellipse cx="380" cy="360" rx="60" ry="32" fill="#EDE0F5" opacity="0.45"/>
+  <!-- Pip — larger, more detailed on cover -->
+  <!-- shadow on cloud -->
+  <ellipse cx="215" cy="445" rx="48" ry="14" fill="#C8B8E8" opacity="0.3"/>
+  <!-- body -->
+  <ellipse cx="215" cy="400" rx="36" ry="40" fill="#FFD0A0"/>
+  <!-- uniform shirt -->
+  <ellipse cx="215" cy="412" rx="32" ry="28" fill="#5590D8"/>
+  <!-- collar -->
+  <ellipse cx="215" cy="385" rx="18" ry="8" fill="#5590D8"/>
+  <!-- head -->
+  <circle cx="215" cy="355" r="34" fill="#FFCF98"/>
+  <!-- hat brim -->
+  <rect x="192" y="325" width="46" height="10" rx="5" fill="#4A90D9"/>
+  <!-- hat body -->
+  <rect x="199" y="306" width="32" height="21" rx="5" fill="#3A7BC8"/>
+  <!-- hat band -->
+  <rect x="199" y="321" width="32" height="5" rx="2" fill="#2860A8"/>
+  <!-- hat badge -->
+  <rect x="207" y="310" width="16" height="8" rx="2" fill="#FFE090"/>
+  <text x="215" y="317" text-anchor="middle" font-size="5" fill="#A07010" font-family="sans-serif">✉</text>
+  <!-- eyes -->
+  <ellipse cx="205" cy="354" rx="5.5" ry="6" fill="#3D2B1F"/>
+  <ellipse cx="225" cy="354" rx="5.5" ry="6" fill="#3D2B1F"/>
+  <circle cx="207.5" cy="351.5" r="2" fill="#fff"/>
+  <circle cx="227.5" cy="351.5" r="2" fill="#fff"/>
+  <circle cx="208.5" cy="352.5" r="1" fill="#7090E0"/>
+  <circle cx="228.5" cy="352.5" r="1" fill="#7090E0"/>
+  <!-- eyebrows -->
+  <path d="M200 346 Q205 342 210 346" stroke="#6A4020" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M220 346 Q225 342 230 346" stroke="#6A4020" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- smile big -->
+  <path d="M205 366 Q215 377 225 366" stroke="#A0603A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <circle cx="197" cy="363" r="9" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="233" cy="363" r="9" fill="#FFB0A0" opacity="0.55"/>
+  <!-- arms wide open -->
+  <ellipse cx="170" cy="400" rx="24" ry="12" fill="#FFD0A0" transform="rotate(-35 170 400)"/>
+  <ellipse cx="260" cy="392" rx="24" ry="12" fill="#FFD0A0" transform="rotate(35 260 392)"/>
+  <!-- hands -->
+  <circle cx="155" cy="390" r="10" fill="#FFCF98"/>
+  <circle cx="275" cy="384" r="10" fill="#FFCF98"/>
+  <!-- bag on side -->
+  <rect x="238" y="378" width="30" height="26" rx="7" fill="#E8C060"/>
+  <rect x="243" y="373" width="20" height="8" rx="4" fill="#D4A840"/>
+  <!-- bag flap -->
+  <rect x="238" y="378" width="30" height="12" rx="4" fill="#D4A840"/>
+  <!-- envelope in left hand -->
+  <rect x="138" y="382" width="28" height="20" rx="4" fill="#FFFFFF" opacity="0.95"/>
+  <path d="M138 382 L152 393 L166 382" stroke="#90C0E0" stroke-width="1.8" fill="none"/>
+  <!-- envelope seal dot -->
+  <circle cx="152" cy="390" r="3" fill="#FF8090" opacity="0.7"/>
+  <!-- legs -->
+  <ellipse cx="203" cy="438" rx="13" ry="7" fill="#3A7BC8" transform="rotate(12 203 438)"/>
+  <ellipse cx="228" cy="440" rx="13" ry="7" fill="#3A7BC8" transform="rotate(-12 228 440)"/>
+  <!-- shoes -->
+  <ellipse cx="197" cy="443" rx="12" ry="6" fill="#2860A8"/>
+  <ellipse cx="232" cy="445" rx="12" ry="6" fill="#2860A8"/>
+  <!-- sparkles around pip -->
+  <text x="148" y="348" font-size="14" fill="#FFE890" opacity="0.8">✦</text>
+  <text x="272" y="345" font-size="12" fill="#FFE890" opacity="0.7">✦</text>
+  <text x="155" y="428" font-size="10" fill="#C8AAEE" opacity="0.7">✦</text>
+  <text x="268" y="432" font-size="11" fill="#C8AAEE" opacity="0.65">✦</text>
+  <!-- title bg soft -->
+  <rect x="30" y="535" width="370" height="138" rx="22" fill="rgba(255,240,180,0.1)"/>
+  <!-- decorative stars around title -->
+  <text x="60" y="565" font-size="18" fill="#FFE8A0" opacity="0.8">✦</text>
+  <text x="360" y="565" font-size="18" fill="#FFE8A0" opacity="0.8">✦</text>
+
+  <!-- bottom decorative clouds -->
+  <ellipse cx="80" cy="880" rx="100" ry="45" fill="#EDE0F5" opacity="0.15"/>
+  <ellipse cx="350" cy="900" rx="110" ry="50" fill="#EDE0F5" opacity="0.12"/>
+</svg>
+<div class="cover-content">
+  <div style="height:530px"></div>
+  <h1 style="text-shadow:0 3px 12px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.7);">O Pequeno Carteiro<br>das Nuvens</h1>
+  <p class="subtitle">Uma aventura nas alturas dos céus</p>
+    <img src="data:image/png;base64,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" alt="Dormistória" style="width:90px;height:90px;margin-top:16px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.6));"/>
+  <a href="https://dormistoria.com.br" target="_blank" style="font-family:'Nunito',sans-serif;font-size:clamp(12px,3.2vw,15px);font-weight:800;color:#FFE8A0;margin-top:10px;text-decoration:none;letter-spacing:0.04em;text-shadow:0 2px 8px rgba(0,0,0,0.8);">dormistoria.com.br</a>
+  <p style="font-family:'Nunito',sans-serif;font-size:clamp(9px,2.5vw,12px);font-weight:600;color:rgba(255,255,255,0.4);margin-top:8px;">© Dormistória. Todos os direitos reservados.</p>
+</div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page" id="page-1" style="background:#D8EAF8">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <!-- sky -->
+  <rect width="430" height="540" fill="#B8D8F0"/>
+  <!-- fluffy clouds bg -->
+  <ellipse cx="80" cy="100" rx="70" ry="40" fill="#EAF4FF" opacity="0.9"/>
+  <ellipse cx="350" cy="80" rx="80" ry="42" fill="#EAF4FF" opacity="0.9"/>
+  <ellipse cx="215" cy="130" rx="100" ry="50" fill="#F5FAFF" opacity="0.85"/>
+  <!-- village below -->
+  <rect x="0" y="400" width="430" height="140" fill="#C8DDA0"/>
+  <!-- houses -->
+  <rect x="40" y="340" width="60" height="70" rx="4" fill="#E8C090"/>
+  <polygon points="40,340 100,340 70,300" fill="#D08060"/>
+  <rect x="55" y="370" width="16" height="20" rx="2" fill="#7A5030"/>
+  <rect x="78" y="355" width="14" height="14" rx="2" fill="#AAD0E8"/>
+  <rect x="160" y="350" width="55" height="60" rx="4" fill="#F0D0A0"/>
+  <polygon points="160,350 215,350 187,315" fill="#C06040"/>
+  <rect x="174" y="378" width="12" height="18" rx="2" fill="#7A5030"/>
+  <rect x="196" y="362" width="11" height="11" rx="2" fill="#AAD0E8"/>
+  <rect x="280" y="345" width="65" height="65" rx="4" fill="#E0C8B0"/>
+  <polygon points="280,345 345,345 312,308" fill="#B05840"/>
+  <rect x="296" y="370" width="14" height="22" rx="2" fill="#7A5030"/>
+  <rect x="318" y="358" width="13" height="13" rx="2" fill="#AAD0E8"/>
+  <!-- trees -->
+  <rect x="140" y="390" width="8" height="30" fill="#8A6040"/>
+  <ellipse cx="144" cy="380" rx="18" ry="22" fill="#6AAA50"/>
+  <rect x="240" y="385" width="8" height="35" fill="#8A6040"/>
+  <ellipse cx="244" cy="375" rx="20" ry="24" fill="#5A9840"/>
+  <rect x="370" y="390" width="7" height="28" fill="#8A6040"/>
+  <ellipse cx="373" cy="381" rx="16" ry="20" fill="#6AAA50"/>
+  <!-- BIG CLOUD with Pip -->
+  <ellipse cx="215" cy="220" rx="140" ry="90" fill="#FDFEFF"/>
+  <ellipse cx="110" cy="255" rx="80" ry="60" fill="#FDFEFF"/>
+  <ellipse cx="330" cy="250" rx="85" ry="62" fill="#FDFEFF"/>
+  <!-- Pip the postman -->
+  <!-- body -->
+  <ellipse cx="215" cy="210" rx="25" ry="28" fill="#FFD0A0"/>
+  <!-- head -->
+  <circle cx="215" cy="178" r="24" fill="#FFCF98"/>
+  <!-- hat -->
+  <rect x="200" y="155" width="30" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="204" y="143" width="22" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- eyes -->
+  <ellipse cx="208" cy="178" rx="3.5" ry="4" fill="#3D2B1F"/>
+  <ellipse cx="222" cy="178" rx="3.5" ry="4" fill="#3D2B1F"/>
+  <circle cx="209.5" cy="176.5" r="1.2" fill="#fff"/>
+  <circle cx="223.5" cy="176.5" r="1.2" fill="#fff"/>
+  <!-- smile -->
+  <path d="M208 187 Q215 194 222 187" stroke="#A0603A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- cheeks -->
+  <circle cx="202" cy="184" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="228" cy="184" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <!-- arms/wings wide open -->
+  <ellipse cx="182" cy="212" rx="18" ry="9" fill="#FFD0A0" transform="rotate(-25 182 212)"/>
+  <ellipse cx="248" cy="208" rx="18" ry="9" fill="#FFD0A0" transform="rotate(25 248 208)"/>
+  <!-- bag -->
+  <rect x="232" y="200" width="20" height="18" rx="4" fill="#E8C060"/>
+  <rect x="236" y="196" width="13" height="5" rx="2.5" fill="#D4A840"/>
+  <!-- legs -->
+  <ellipse cx="208" cy="234" rx="9" ry="5" fill="#4A90D9" transform="rotate(8 208 234)"/>
+  <ellipse cx="224" cy="236" rx="9" ry="5" fill="#4A90D9" transform="rotate(-8 224 236)"/>
+  <ellipse cx="204" cy="238" rx="8" ry="4" fill="#3A6090"/>
+  <ellipse cx="229" cy="239" rx="8" ry="4" fill="#3A6090"/>
+  <!-- small envelope -->
+  <rect x="158" y="205" width="20" height="14" rx="2.5" fill="#FFFFFF" opacity="0.95"/>
+  <path d="M158 205 L168 212 L178 205" stroke="#A0CCEE" stroke-width="1.3" fill="none"/>
+</svg>
+</div>
+<div class="text-box" style="background:#D8EAF8">
+  <p>Era uma manhã bem pequenininha quando Pip, o carteiro das nuvens, acordou saltitante e pronto para o trabalho.</p>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page-2" style="background:#EDF5FF">
+<div class="illustration" style="height:55%">
+<svg viewBox="0 0 430 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="500" fill="#C0DCF4"/>
+  <!-- morning glow -->
+  <ellipse cx="215" cy="0" rx="200" ry="100" fill="#FFE8A0" opacity="0.3"/>
+  <!-- cloud post office -->
+  <ellipse cx="215" cy="250" rx="170" ry="110" fill="#F8F4FF"/>
+  <ellipse cx="70" cy="290" rx="100" ry="72" fill="#F8F4FF"/>
+  <ellipse cx="370" cy="280" rx="105" ry="75" fill="#F8F4FF"/>
+  <!-- door -->
+  <rect x="195" y="255" width="40" height="50" rx="8" fill="#D4A870"/>
+  <circle cx="230" cy="281" r="3" fill="#A07840"/>
+  <!-- windows -->
+  <rect x="140" y="248" width="34" height="28" rx="5" fill="#AAD8F0"/>
+  <line x1="157" y1="248" x2="157" y2="276" stroke="#7AB8D8" stroke-width="1.5"/>
+  <line x1="140" y1="262" x2="174" y2="262" stroke="#7AB8D8" stroke-width="1.5"/>
+  <rect x="256" y="248" width="34" height="28" rx="5" fill="#AAD8F0"/>
+  <line x1="273" y1="248" x2="273" y2="276" stroke="#7AB8D8" stroke-width="1.5"/>
+  <line x1="256" y1="262" x2="290" y2="262" stroke="#7AB8D8" stroke-width="1.5"/>
+  <!-- sign -->
+  <rect x="170" y="220" width="90" height="24" rx="6" fill="#FFE090"/>
+  <text x="215" y="236" text-anchor="middle" font-size="11" fill="#7A5030" font-family="Nunito,sans-serif" font-weight="700">Correios das Nuvens</text>
+  <!-- Pip smaller, looking at mailbag full of letters -->
+  <circle cx="330" cy="340" r="20" fill="#FFCF98"/>
+  <rect x="318" y="317" width="24" height="6" rx="3" fill="#4A90D9"/>
+  <rect x="322" y="307" width="18" height="12" rx="3" fill="#3A7BC8"/>
+  <ellipse cx="324" cy="340" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <ellipse cx="336" cy="340" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <circle cx="325" cy="338.5" r="1" fill="#fff"/>
+  <circle cx="337" cy="338.5" r="1" fill="#fff"/>
+  <path d="M324 348 Q330 354 336 348" stroke="#A0603A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="330" cy="360" rx="22" ry="24" fill="#FFD0A0"/>
+  <ellipse cx="312" cy="364" rx="15" ry="8" fill="#FFD0A0" transform="rotate(-20 312 364)"/>
+  <ellipse cx="348" cy="360" rx="15" ry="8" fill="#FFD0A0" transform="rotate(20 348 360)"/>
+  <!-- big mailbag -->
+  <ellipse cx="295" cy="380" rx="35" ry="42" fill="#E8C060"/>
+  <ellipse cx="295" cy="342" rx="18" ry="10" fill="#D4A840"/>
+  <!-- envelopes peeking -->
+  <rect x="275" y="345" width="18" height="13" rx="2" fill="#fff" opacity="0.9"/>
+  <rect x="298" y="342" width="18" height="13" rx="2" fill="#FFE0C0" opacity="0.9"/>
+  <rect x="286" y="352" width="18" height="13" rx="2" fill="#C0E0FF" opacity="0.9"/>
+  <ellipse cx="305" cy="384" rx="9" ry="5" fill="#4A90D9" transform="rotate(-5 305 384)"/>
+  <ellipse cx="321" cy="386" rx="9" ry="5" fill="#4A90D9" transform="rotate(5 321 386)"/>
+  <ellipse cx="301" cy="390" rx="8" ry="4" fill="#3A6090"/>
+  <ellipse cx="325" cy="391" rx="8" ry="4" fill="#3A6090"/>
+  <circle cx="318" cy="358" r="4" fill="#FFB0A0" opacity="0.5"/>
+  <circle cx="342" cy="358" r="4" fill="#FFB0A0" opacity="0.5"/>
+</svg>
+</div>
+<div class="text-box" style="background:#EDF5FF">
+  <p>Na nuvem-escritório, esperava por ele uma mochila <em>enorme</em> de cartas — mais do que nunca!</p>
+  <p style="margin-top:10px;font-size:0.9em;color:#5C7090">"Hoje vai ser um dia especial", disse Pip, sorrindo.</p>
+</div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page-3" style="background:#F5EEFF">
+<div class="illustration" style="height:60%">
+<svg viewBox="0 0 430 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="560" fill="#D4C4EE"/>
+  <!-- sky gradient feel -->
+  <ellipse cx="215" cy="0" rx="300" ry="180" fill="#E8D8FF" opacity="0.6"/>
+  <!-- floating letters in the air -->
+  <!-- letter 1 -->
+  <g transform="rotate(-15 100 180)">
+    <rect x="82" y="168" width="36" height="28" rx="4" fill="#FFF8F0" stroke="#E0C090" stroke-width="1.5"/>
+    <path d="M82 168 L100 182 L118 168" stroke="#E0C090" stroke-width="1.5" fill="none"/>
+  </g>
+  <!-- letter 2 -->
+  <g transform="rotate(10 340 140)">
+    <rect x="322" y="128" width="36" height="28" rx="4" fill="#F0F8FF" stroke="#90C0E0" stroke-width="1.5"/>
+    <path d="M322 128 L340 142 L358 128" stroke="#90C0E0" stroke-width="1.5" fill="none"/>
+  </g>
+  <!-- letter 3 -->
+  <g transform="rotate(-8 200 100)">
+    <rect x="182" y="88" width="36" height="28" rx="4" fill="#FFF0F8" stroke="#E090B0" stroke-width="1.5"/>
+    <path d="M182 88 L200 102 L218 88" stroke="#E090B0" stroke-width="1.5" fill="none"/>
+  </g>
+  <!-- big main cloud Pip is on -->
+  <ellipse cx="215" cy="340" rx="160" ry="100" fill="#F5F0FF" opacity="0.97"/>
+  <ellipse cx="90" cy="380" rx="90" ry="65" fill="#F5F0FF" opacity="0.97"/>
+  <ellipse cx="345" cy="365" rx="95" ry="68" fill="#F5F0FF" opacity="0.97"/>
+  <!-- Pip reading a letter, sitting -->
+  <circle cx="215" cy="285" r="24" fill="#FFCF98"/>
+  <rect x="202" y="263" width="26" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="206" y="251" width="19" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- focused eyes -->
+  <ellipse cx="208" cy="284" rx="3.5" ry="3" fill="#3D2B1F"/>
+  <ellipse cx="222" cy="284" rx="3.5" ry="3" fill="#3D2B1F"/>
+  <circle cx="209.5" cy="283" r="1" fill="#fff"/>
+  <circle cx="223.5" cy="283" r="1" fill="#fff"/>
+  <path d="M209 292 Q215 297 221 292" stroke="#A0603A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="204" cy="290" r="4.5" fill="#FFB0A0" opacity="0.5"/>
+  <circle cx="226" cy="290" r="4.5" fill="#FFB0A0" opacity="0.5"/>
+  <ellipse cx="215" cy="315" rx="24" ry="27" fill="#FFD0A0"/>
+  <!-- arms holding letter -->
+  <ellipse cx="185" cy="308" rx="16" ry="8" fill="#FFD0A0" transform="rotate(20 185 308)"/>
+  <ellipse cx="245" cy="308" rx="16" ry="8" fill="#FFD0A0" transform="rotate(-20 245 308)"/>
+  <!-- letter being read -->
+  <rect x="190" y="298" width="50" height="38" rx="5" fill="#FFFAF0"/>
+  <path d="M190 298 L215 315 L240 298" stroke="#E0C090" stroke-width="1.5" fill="none"/>
+  <!-- lines on letter -->
+  <line x1="198" y1="315" x2="232" y2="315" stroke="#D0C090" stroke-width="1.2" opacity="0.6"/>
+  <line x1="198" y1="321" x2="228" y2="321" stroke="#D0C090" stroke-width="1.2" opacity="0.6"/>
+  <line x1="198" y1="327" x2="230" y2="327" stroke="#D0C090" stroke-width="1.2" opacity="0.6"/>
+  <!-- legs crossed -->
+  <ellipse cx="205" cy="340" rx="18" ry="7" fill="#4A90D9" transform="rotate(15 205 340)"/>
+  <ellipse cx="230" cy="338" rx="18" ry="7" fill="#4A90D9" transform="rotate(-15 230 338)"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F5EEFF">
+  <p>Pip pegou a primeira carta. Ela tinha um endereço bem estranho, escrito com letras coloridas:</p>
+  <p style="margin-top:10px;text-align:center;font-size:1.05em;color:#6040A0;background:rgba(200,180,240,0.3);padding:10px;border-radius:12px">"Para o Urso Bernardo, na Floresta do Fundo do Vale."</p>
+</div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page" id="page-4" style="background:#E8F5E8">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="540" fill="#A8D4C0"/>
+  <!-- sky top -->
+  <rect x="0" y="0" width="430" height="220" fill="#B8DCF0"/>
+  <!-- hills -->
+  <ellipse cx="100" cy="320" rx="180" ry="120" fill="#8CC4A0"/>
+  <ellipse cx="340" cy="350" rx="190" ry="130" fill="#7AB890"/>
+  <ellipse cx="215" cy="360" rx="230" ry="140" fill="#C8E8B0"/>
+  <!-- forest -->
+  <!-- trees -->
+  <rect x="30" y="270" width="10" height="50" fill="#6A8040"/>
+  <polygon points="35,200 15,280 55,280" fill="#5A9050"/>
+  <rect x="75" y="265" width="10" height="55" fill="#6A8040"/>
+  <polygon points="80,190 58,268 102,268" fill="#4A8045"/>
+  <rect x="120" y="260" width="10" height="58" fill="#6A8040"/>
+  <polygon points="125,185 103,263 147,263" fill="#5A9050"/>
+  <rect x="290" y="255" width="10" height="60" fill="#6A8040"/>
+  <polygon points="295,178 273,258 317,258" fill="#4A8045"/>
+  <rect x="335" y="265" width="10" height="50" fill="#6A8040"/>
+  <polygon points="340,195 318,268 362,268" fill="#5A9050"/>
+  <rect x="380" y="270" width="10" height="48" fill="#6A8040"/>
+  <polygon points="385,205 363,272 407,272" fill="#4A8045"/>
+  <!-- Pip flying high above trees -->
+  <!-- cloud mini under pip -->
+  <ellipse cx="215" cy="160" rx="60" ry="35" fill="#F0F8FF" opacity="0.85"/>
+  <ellipse cx="175" cy="175" rx="38" ry="26" fill="#F0F8FF" opacity="0.85"/>
+  <ellipse cx="258" cy="170" rx="40" ry="28" fill="#F0F8FF" opacity="0.85"/>
+  <!-- Pip flying arms out -->
+  <circle cx="215" cy="128" r="20" fill="#FFCF98"/>
+  <rect x="203" y="109" width="22" height="6" rx="3" fill="#4A90D9"/>
+  <rect x="207" y="98" width="16" height="13" rx="3" fill="#3A7BC8"/>
+  <!-- big smile flying -->
+  <ellipse cx="208" cy="127" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <ellipse cx="222" cy="127" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <circle cx="209" cy="125.5" r="1" fill="#fff"/>
+  <circle cx="223" cy="125.5" r="1" fill="#fff"/>
+  <path d="M207 135 Q215 143 223 135" stroke="#A0603A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <circle cx="203" cy="132" r="4" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="227" cy="132" r="4" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="215" cy="151" rx="20" ry="22" fill="#FFD0A0"/>
+  <!-- arms wide flying -->
+  <ellipse cx="185" cy="148" rx="22" ry="8" fill="#FFD0A0" transform="rotate(-30 185 148)"/>
+  <ellipse cx="248" cy="143" rx="22" ry="8" fill="#FFD0A0" transform="rotate(30 248 143)"/>
+  <!-- bag on back -->
+  <ellipse cx="232" cy="146" rx="16" ry="18" fill="#E8C060"/>
+  <!-- legs streaming behind -->
+  <ellipse cx="208" cy="172" rx="8" ry="5" fill="#4A90D9" transform="rotate(20 208 172)"/>
+  <ellipse cx="223" cy="174" rx="8" ry="5" fill="#4A90D9" transform="rotate(-20 223 174)"/>
+  <!-- wind lines -->
+  <path d="M155 145 Q165 140 155 135" stroke="#B0D8F0" stroke-width="2" fill="none" opacity="0.7"/>
+  <path d="M148 155 Q160 150 148 144" stroke="#B0D8F0" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M270 138 Q280 133 270 128" stroke="#B0D8F0" stroke-width="2" fill="none" opacity="0.7"/>
+</svg>
+</div>
+<div class="text-box" style="background:#E8F5E8">
+  <p>Pip abriu as asas — sim, os braços de Pip eram leves como asas! — e começou a voar pela floresta lá embaixo.</p>
+</div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page" id="page-5">
+<svg viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+  <rect width="430" height="932" fill="#D0EAC0"/>
+  <!-- dense forest floor -->
+  <rect x="0" y="650" width="430" height="282" fill="#8CB870"/>
+  <!-- many trees -->
+  <rect x="10" y="480" width="14" height="200" fill="#6A6030"/>
+  <polygon points="17,330 -10,490 44,490" fill="#3A7840"/>
+  <polygon points="17,380 -5,490 39,490" fill="#4A9050"/>
+  <rect x="60" y="460" width="14" height="220" fill="#6A6030"/>
+  <polygon points="67,300 40,470 94,470" fill="#3A7840"/>
+  <rect x="120" y="440" width="16" height="240" fill="#5A5020"/>
+  <polygon points="128,285 98,450 158,450" fill="#4A8845"/>
+  <polygon points="128,350 100,450 156,450" fill="#5A9850"/>
+  <rect x="200" y="445" width="14" height="235" fill="#6A6030"/>
+  <polygon points="207,290 180,455 234,455" fill="#3A7040"/>
+  <rect x="270" y="450" width="16" height="230" fill="#5A5020"/>
+  <polygon points="278,295 248,460 308,460" fill="#4A8045"/>
+  <rect x="340" y="460" width="14" height="220" fill="#6A6030"/>
+  <polygon points="347,305 318,470 376,470" fill="#3A7840"/>
+  <rect x="398" y="475" width="14" height="207" fill="#6A6030"/>
+  <polygon points="405,325 378,485 432,485" fill="#4A8045"/>
+  <!-- sunlight rays through trees -->
+  <polygon points="180,0 160,400 200,400" fill="#FFE890" opacity="0.15"/>
+  <polygon points="280,0 258,380 302,380" fill="#FFE890" opacity="0.12"/>
+  <!-- bear Bernardo sitting on stump -->
+  <ellipse cx="215" cy="740" rx="50" ry="30" fill="#A07040"/>
+  <!-- stump -->
+  <rect x="195" y="760" width="40" height="20" rx="5" fill="#7A5030"/>
+  <!-- bear body -->
+  <ellipse cx="215" cy="680" rx="44" ry="52" fill="#C08848"/>
+  <!-- bear head -->
+  <circle cx="215" cy="612" r="44" fill="#C08848"/>
+  <!-- bear ears -->
+  <circle cx="183" cy="580" r="18" fill="#C08848"/>
+  <circle cx="183" cy="580" r="12" fill="#A07040"/>
+  <circle cx="247" cy="580" r="18" fill="#C08848"/>
+  <circle cx="247" cy="580" r="12" fill="#A07040"/>
+  <!-- bear face -->
+  <ellipse cx="215" cy="628" rx="22" ry="16" fill="#D0A870"/>
+  <!-- nose -->
+  <ellipse cx="215" cy="620" rx="8" ry="6" fill="#4A2A10"/>
+  <!-- eyes -->
+  <ellipse cx="202" cy="605" rx="5" ry="6" fill="#3D2010"/>
+  <ellipse cx="228" cy="605" rx="5" ry="6" fill="#3D2010"/>
+  <circle cx="204" cy="603" r="2" fill="#fff"/>
+  <circle cx="230" cy="603" r="2" fill="#fff"/>
+  <!-- wondering expression - eyebrows up -->
+  <path d="M197 598 Q202 594 207 598" stroke="#3D2010" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M223 598 Q228 594 233 598" stroke="#3D2010" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- mouth sad/wondering -->
+  <path d="M208 635 Q215 631 222 635" stroke="#4A2A10" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <!-- arms -->
+  <ellipse cx="164" cy="688" rx="22" ry="12" fill="#C08848" transform="rotate(20 164 688)"/>
+  <ellipse cx="266" cy="685" rx="22" ry="12" fill="#C08848" transform="rotate(-20 266 685)"/>
+  <!-- honey pot -->
+  <ellipse cx="155" cy="710" rx="16" ry="12" fill="#E8A820"/>
+  <rect x="143" y="698" width="24" height="14" rx="5" fill="#E8A820"/>
+  <ellipse cx="155" cy="698" rx="12" ry="5" fill="#F0BC40"/>
+  <text x="155" y="710" text-anchor="middle" font-size="10" fill="#A06010" font-family="Nunito,sans-serif">mel</text>
+</svg>
+<div class="text-overlay">
+  <div class="bubble">
+    <p>No coração da floresta, o Urso Bernardo estava sentado no seu toco, de cara feia. O pote de mel estava vazio há três dias.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 6 -->
+<div class="page" id="page-6" style="background:#EEE8D8">
+<div class="illustration" style="height:57%">
+<svg viewBox="0 0 430 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="530" fill="#D4C8A0"/>
+  <!-- warm interior feel - cozy cave/den -->
+  <ellipse cx="215" cy="530" rx="300" ry="200" fill="#B8A878"/>
+  <!-- cave walls -->
+  <path d="M0,200 Q80,100 215,120 Q350,100 430,200 L430,530 L0,530Z" fill="#C8B880"/>
+  <!-- floor -->
+  <rect x="0" y="400" width="430" height="130" fill="#A89850"/>
+  <!-- cozy details: rug -->
+  <ellipse cx="215" cy="430" rx="120" ry="35" fill="#D08040" opacity="0.5"/>
+  <!-- shelf with honey pots -->
+  <rect x="60" y="250" width="140" height="10" rx="3" fill="#8A6030"/>
+  <ellipse cx="90" cy="242" rx="12" ry="14" fill="#C88020"/>
+  <rect x="82" y="228" width="16" height="16" rx="4" fill="#C88020"/>
+  <ellipse cx="90" cy="228" rx="8" ry="4" fill="#DFA040"/>
+  <ellipse cx="118" cy="242" rx="12" ry="14" fill="#D89030"/>
+  <rect x="110" y="228" width="16" height="16" rx="4" fill="#D89030"/>
+  <ellipse cx="118" cy="228" rx="8" ry="4" fill="#EAB050"/>
+  <ellipse cx="150" cy="240" rx="10" ry="12" fill="#B87020"/>
+  <rect x="144" y="228" width="12" height="14" rx="4" fill="#B87020"/>
+  <ellipse cx="150" cy="228" rx="7" ry="3.5" fill="#D09040"/>
+  <!-- "empty" pot on table -->
+  <rect x="80" y="340" width="30" height="24" rx="6" fill="#C88020" opacity="0.5"/>
+  <ellipse cx="95" cy="340" rx="15" ry="5" fill="#DFA040" opacity="0.5"/>
+  <text x="95" y="355" text-anchor="middle" font-size="9" fill="#7A4010" font-family="Nunito,sans-serif" opacity="0.8">vazio!</text>
+  <!-- Bear sitting, sad, looking at empty pot -->
+  <ellipse cx="270" cy="420" rx="45" ry="26" fill="#C08848"/>
+  <ellipse cx="270" cy="368" rx="40" ry="48" fill="#C08848"/>
+  <circle cx="270" cy="308" r="40" fill="#C08848"/>
+  <circle cx="242" cy="278" r="16" fill="#C08848"/>
+  <circle cx="242" cy="278" r="11" fill="#A07040"/>
+  <circle cx="298" cy="278" r="16" fill="#C08848"/>
+  <circle cx="298" cy="278" r="11" fill="#A07040"/>
+  <ellipse cx="270" cy="322" rx="20" ry="14" fill="#D0A870"/>
+  <ellipse cx="270" cy="315" rx="7" ry="5.5" fill="#4A2A10"/>
+  <ellipse cx="258" cy="304" rx="4.5" ry="5.5" fill="#3D2010"/>
+  <ellipse cx="282" cy="304" rx="4.5" ry="5.5" fill="#3D2010"/>
+  <circle cx="260" cy="302" r="1.8" fill="#fff"/>
+  <circle cx="284" cy="302" r="1.8" fill="#fff"/>
+  <!-- sad eyebrows -->
+  <path d="M254 296 Q258 293 263 297" stroke="#3D2010" stroke-width="2" fill="none"/>
+  <path d="M277 297 Q282 293 286 296" stroke="#3D2010" stroke-width="2" fill="none"/>
+  <!-- sad mouth -->
+  <path d="M264 328 Q270 323 276 328" stroke="#4A2A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="248" cy="315" rx="12" ry="9" fill="#C08848" transform="rotate(25 248 315)"/>
+  <ellipse cx="292" cy="312" rx="12" ry="9" fill="#C08848" transform="rotate(-25 292 312)"/>
+  <!-- tear drop -->
+  <ellipse cx="256" cy="316" rx="3" ry="4" fill="#A0C8E8" opacity="0.7"/>
+</svg>
+</div>
+<div class="text-box" style="background:#EEE8D8">
+  <p>"Todo mundo lá fora tem mel, menos eu", resmungou Bernardo, franzindo o focinho.</p>
+  <p style="margin-top:10px">— "Mas o que será que está chegando lá em cima?" —</p>
+</div>
+</div>
+
+<!-- PAGE 7 -->
+<div class="page" id="page-7">
+<svg viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+  <rect width="430" height="932" fill="#B8D8C8"/>
+  <!-- forest backdrop -->
+  <rect x="0" y="500" width="430" height="432" fill="#7AB870"/>
+  <rect x="0" y="0" width="430" height="500" fill="#A8D8E8"/>
+  <!-- trees -->
+  <rect x="0" y="370" width="12" height="170" fill="#5A5020"/>
+  <polygon points="6,230 -16,380 28,380" fill="#3A7040"/>
+  <rect x="50" y="360" width="12" height="180" fill="#5A5020"/>
+  <polygon points="56,218 32,370 80,370" fill="#4A8045"/>
+  <rect x="100" y="350" width="14" height="190" fill="#5A5020"/>
+  <polygon points="107,206 80,360 134,360" fill="#3A7040"/>
+  <rect x="310" y="345" width="14" height="195" fill="#5A5020"/>
+  <polygon points="317,200 290,355 344,355" fill="#4A8045"/>
+  <rect x="368" y="358" width="12" height="182" fill="#5A5020"/>
+  <polygon points="374,215 350,368 398,368" fill="#3A7040"/>
+  <rect x="410" y="370" width="12" height="170" fill="#5A5020"/>
+  <polygon points="416,230 393,380 439,380" fill="#4A8045"/>
+  <!-- Pip zooming down fast towards bear -->
+  <!-- speed lines -->
+  <line x1="150" y1="100" x2="215" y2="220" stroke="#C0E0FF" stroke-width="2" opacity="0.5"/>
+  <line x1="280" y1="95" x2="220" y2="215" stroke="#C0E0FF" stroke-width="2" opacity="0.4"/>
+  <line x1="130" y1="140" x2="210" y2="230" stroke="#C0E0FF" stroke-width="1.5" opacity="0.3"/>
+  <!-- cloud puff behind pip -->
+  <ellipse cx="230" cy="200" rx="50" ry="28" fill="#F5F5FF" opacity="0.7"/>
+  <!-- Pip diving down -->
+  <circle cx="215" cy="230" r="20" fill="#FFCF98"/>
+  <rect x="203" y="211" width="22" height="6" rx="3" fill="#4A90D9"/>
+  <rect x="207" y="200" width="16" height="13" rx="3" fill="#3A7BC8"/>
+  <!-- excited eyes -->
+  <ellipse cx="209" cy="229" rx="3.5" ry="4" fill="#3D2B1F"/>
+  <ellipse cx="221" cy="229" rx="3.5" ry="4" fill="#3D2B1F"/>
+  <circle cx="210.5" cy="227.5" r="1.2" fill="#fff"/>
+  <circle cx="222.5" cy="227.5" r="1.2" fill="#fff"/>
+  <path d="M208 238 Q215 246 222 238" stroke="#A0603A" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <circle cx="204" cy="235" r="4" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="226" cy="235" r="4" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="215" cy="252" rx="20" ry="22" fill="#FFD0A0"/>
+  <!-- arms back like diving -->
+  <ellipse cx="192" cy="258" rx="18" ry="7" fill="#FFD0A0" transform="rotate(55 192 258)"/>
+  <ellipse cx="238" cy="256" rx="18" ry="7" fill="#FFD0A0" transform="rotate(-55 238 256)"/>
+  <!-- envelope held out front -->
+  <rect x="200" y="268" width="30" height="22" rx="3.5" fill="#FFFFFF"/>
+  <path d="M200 268 L215 280 L230 268" stroke="#A0CCEE" stroke-width="1.5" fill="none"/>
+  <!-- Bernardo below looking up surprised -->
+  <ellipse cx="215" cy="750" rx="42" ry="25" fill="#C08848"/>
+  <ellipse cx="215" cy="700" rx="38" ry="46" fill="#C08848"/>
+  <circle cx="215" cy="645" r="38" fill="#C08848"/>
+  <circle cx="189" cy="617" r="15" fill="#C08848"/>
+  <circle cx="189" cy="617" r="10" fill="#A07040"/>
+  <circle cx="241" cy="617" r="15" fill="#C08848"/>
+  <circle cx="241" cy="617" r="10" fill="#A07040"/>
+  <ellipse cx="215" cy="658" rx="19" ry="13" fill="#D0A870"/>
+  <ellipse cx="215" cy="652" rx="7" ry="5" fill="#4A2A10"/>
+  <!-- surprised eyes wide -->
+  <ellipse cx="203" cy="638" rx="6" ry="7" fill="#3D2010"/>
+  <ellipse cx="227" cy="638" rx="6" ry="7" fill="#3D2010"/>
+  <circle cx="205" cy="635" r="2.5" fill="#fff"/>
+  <circle cx="229" cy="635" r="2.5" fill="#fff"/>
+  <!-- O mouth surprised -->
+  <ellipse cx="215" cy="666" rx="6" ry="7" fill="#4A2A10"/>
+  <!-- arms up surprised -->
+  <ellipse cx="172" cy="700" rx="18" ry="9" fill="#C08848" transform="rotate(-40 172 700)"/>
+  <ellipse cx="258" cy="698" rx="18" ry="9" fill="#C08848" transform="rotate(40 258 698)"/>
+</svg>
+<div class="text-overlay" style="bottom:160px">
+  <div class="bubble">
+    <p>FWOOSH! Uma sombra pequenina desceu do céu como um raio de sol.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 8 -->
+<div class="page" id="page-8" style="background:#FFF5E8">
+<div class="illustration" style="height:55%">
+<svg viewBox="0 0 430 510" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="510" fill="#EEE0C0"/>
+  <!-- forest clearing, bright warm light -->
+  <ellipse cx="215" cy="0" rx="250" ry="150" fill="#FFE890" opacity="0.4"/>
+  <!-- ground -->
+  <rect x="0" y="350" width="430" height="160" fill="#A8C878"/>
+  <!-- flowers on ground -->
+  <circle cx="60" cy="352" r="8" fill="#FF9090"/>
+  <rect x="57" y="352" width="6" height="16" fill="#5A9030"/>
+  <circle cx="90" cy="350" r="6" fill="#FFE060"/>
+  <rect x="87" y="350" width="6" height="14" fill="#5A9030"/>
+  <circle cx="360" cy="355" r="8" fill="#FF90B0"/>
+  <rect x="357" y="355" width="6" height="16" fill="#5A9030"/>
+  <circle cx="390" cy="352" r="6" fill="#FFAA60"/>
+  <rect x="387" y="352" width="6" height="14" fill="#5A9030"/>
+  <!-- Bear sitting on ground, looking at envelope with joy -->
+  <ellipse cx="140" cy="370" rx="52" ry="28" fill="#C08848"/>
+  <ellipse cx="140" cy="318" rx="46" ry="52" fill="#C08848"/>
+  <circle cx="140" cy="252" r="44" fill="#C08848"/>
+  <circle cx="112" cy="220" r="17" fill="#C08848"/>
+  <circle cx="112" cy="220" r="11" fill="#A07040"/>
+  <circle cx="168" cy="220" r="17" fill="#C08848"/>
+  <circle cx="168" cy="220" r="11" fill="#A07040"/>
+  <ellipse cx="140" cy="267" rx="21" ry="15" fill="#D0A870"/>
+  <ellipse cx="140" cy="259" rx="8" ry="6" fill="#4A2A10"/>
+  <!-- happy eyes crinkled -->
+  <path d="M127 245 Q131 240 135 245" stroke="#3D2010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M145 245 Q149 240 153 245" stroke="#3D2010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- big happy smile -->
+  <path d="M130 272 Q140 282 150 272" stroke="#4A2A10" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- blush -->
+  <circle cx="122" cy="265" r="10" fill="#FFB0A0" opacity="0.5"/>
+  <circle cx="158" cy="265" r="10" fill="#FFB0A0" opacity="0.5"/>
+  <!-- paws holding envelope -->
+  <ellipse cx="110" cy="325" rx="20" ry="10" fill="#C08848" transform="rotate(20 110 325)"/>
+  <ellipse cx="170" cy="322" rx="20" ry="10" fill="#C08848" transform="rotate(-20 170 322)"/>
+  <!-- envelope open -->
+  <rect x="100" y="308" width="80" height="60" rx="6" fill="#FFFAEE"/>
+  <path d="M100 308 L140 335 L180 308" stroke="#D0B070" stroke-width="2" fill="none"/>
+  <!-- letter content lines -->
+  <line x1="112" y1="345" x2="168" y2="345" stroke="#C0A060" stroke-width="1.5" opacity="0.7"/>
+  <line x1="112" y1="353" x2="162" y2="353" stroke="#C0A060" stroke-width="1.5" opacity="0.7"/>
+  <line x1="112" y1="361" x2="158" y2="361" stroke="#C0A060" stroke-width="1.5" opacity="0.7"/>
+  <!-- Pip standing next to bear, proud -->
+  <circle cx="295" cy="290" r="18" fill="#FFCF98"/>
+  <rect x="283" y="272" width="20" height="5.5" rx="2.8" fill="#4A90D9"/>
+  <rect x="287" y="261" width="14" height="13" rx="3" fill="#3A7BC8"/>
+  <ellipse cx="289" cy="290" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <ellipse cx="301" cy="290" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <circle cx="290.5" cy="288.5" r="1" fill="#fff"/>
+  <circle cx="302.5" cy="288.5" r="1" fill="#fff"/>
+  <path d="M289 298 Q295 305 301 298" stroke="#A0603A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="284" cy="295" r="3.5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="306" cy="295" r="3.5" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="295" cy="310" rx="18" ry="20" fill="#FFD0A0"/>
+  <ellipse cx="276" cy="315" rx="14" ry="7" fill="#FFD0A0" transform="rotate(-15 276 315)"/>
+  <ellipse cx="314" cy="312" rx="14" ry="7" fill="#FFD0A0" transform="rotate(15 314 312)"/>
+  <ellipse cx="289" cy="328" rx="8" ry="5" fill="#4A90D9" transform="rotate(5 289 328)"/>
+  <ellipse cx="303" cy="330" rx="8" ry="5" fill="#4A90D9" transform="rotate(-5 303 330)"/>
+  <ellipse cx="286" cy="333" rx="7" ry="3.5" fill="#3A6090"/>
+  <ellipse cx="307" cy="334" rx="7" ry="3.5" fill="#3A6090"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF5E8">
+  <p>— "Carta para o Urso Bernardo!" — anunciou Pip, pousando levinho na clareira.</p>
+  <p style="margin-top:10px">Bernardo pegou o envelope com suas patinhas grandes e abrindo devagar, devagar...</p>
+</div>
+</div>
+
+<!-- PAGE 9 -->
+<div class="page" id="page-9" style="background:#FFF8E8">
+<div class="illustration" style="height:50%">
+<svg viewBox="0 0 430 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="480" fill="#F8ECD0"/>
+  <!-- close up of the letter -->
+  <rect x="50" y="40" width="330" height="380" rx="16" fill="#FFFAEE"/>
+  <rect x="50" y="40" width="330" height="380" rx="16" fill="none" stroke="#D0B870" stroke-width="2"/>
+  <!-- letter decoration top -->
+  <ellipse cx="215" cy="40" rx="30" ry="10" fill="#F0E0A0"/>
+  <!-- wax seal -->
+  <circle cx="215" cy="40" r="18" fill="#D04040"/>
+  <text x="215" y="45" text-anchor="middle" font-size="14" fill="#FFE0E0" font-family="serif">♥</text>
+  <!-- letter lines representing text -->
+  <line x1="90" y1="100" x2="340" y2="100" stroke="#E0C880" stroke-width="2" opacity="0.6"/>
+  <line x1="90" y1="118" x2="310" y2="118" stroke="#E0C880" stroke-width="2" opacity="0.6"/>
+  <line x1="90" y1="136" x2="330" y2="136" stroke="#E0C880" stroke-width="2" opacity="0.6"/>
+  <line x1="90" y1="154" x2="300" y2="154" stroke="#E0C880" stroke-width="2" opacity="0.6"/>
+  <!-- big surprise element: little drawing inside letter of honey jar with bow -->
+  <ellipse cx="215" cy="280" rx="55" ry="65" fill="#F0C040"/>
+  <rect x="168" y="225" width="94" height="70" rx="12" fill="#F0C040"/>
+  <ellipse cx="215" cy="225" rx="47" ry="18" fill="#FFD860"/>
+  <!-- honey drips -->
+  <ellipse cx="190" cy="345" rx="8" ry="10" fill="#E0A820"/>
+  <ellipse cx="215" cy="350" rx="8" ry="12" fill="#E0A820"/>
+  <ellipse cx="240" cy="344" rx="8" ry="9" fill="#E0A820"/>
+  <!-- bow on jar -->
+  <ellipse cx="195" cy="215" rx="20" ry="12" fill="#FF8090" transform="rotate(-20 195 215)"/>
+  <ellipse cx="235" cy="215" rx="20" ry="12" fill="#FF8090" transform="rotate(20 235 215)"/>
+  <circle cx="215" cy="215" r="8" fill="#FF6070"/>
+  <!-- label -->
+  <rect x="180" y="258" width="70" height="30" rx="5" fill="#FFF8E0"/>
+  <text x="215" y="277" text-anchor="middle" font-size="12" fill="#8A6020" font-family="Nunito,sans-serif" font-weight="700">MEL DE FLORES</text>
+  <!-- letter ending signature -->
+  <text x="90" y="400" font-size="12" fill="#B09060" font-family="Nunito,sans-serif">Com carinho,</text>
+  <text x="90" y="418" font-size="14" fill="#8A7040" font-family="Nunito,sans-serif" font-weight="700">A Abelha Bela ♥</text>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF8E8">
+  <p>Era da Abelha Bela! Ela tinha mandado uma receita do mel mais gostoso do mundo — com uma surpresa especial no fim.</p>
+</div>
+</div>
+
+<!-- PAGE 10 -->
+<div class="page" id="page-10" style="background:#FFF0F8">
+<div class="illustration" style="height:60%">
+<svg viewBox="0 0 430 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="560" fill="#F8E0F0"/>
+  <!-- flower meadow -->
+  <rect x="0" y="380" width="430" height="180" fill="#C0D890"/>
+  <!-- many flowers -->
+  <circle cx="30" cy="382" r="9" fill="#FF8090"/>
+  <rect x="26" y="382" width="8" height="20" fill="#5A9030"/>
+  <circle cx="65" cy="378" r="7" fill="#FFD060"/>
+  <rect x="61" y="378" width="8" height="18" fill="#5A9030"/>
+  <circle cx="100" cy="382" r="9" fill="#FF90C0"/>
+  <rect x="96" y="382" width="8" height="20" fill="#5A9030"/>
+  <circle cx="140" cy="376" r="7" fill="#FFAA60"/>
+  <rect x="136" y="376" width="8" height="18" fill="#5A9030"/>
+  <circle cx="175" cy="382" r="9" fill="#FF8090"/>
+  <rect x="171" y="382" width="8" height="20" fill="#5A9030"/>
+  <circle cx="210" cy="377" r="7" fill="#A0D060"/>
+  <rect x="206" y="377" width="8" height="18" fill="#5A9030"/>
+  <circle cx="250" cy="382" r="9" fill="#FFD060"/>
+  <rect x="246" y="382" width="8" height="20" fill="#5A9030"/>
+  <circle cx="290" cy="376" r="7" fill="#FF90C0"/>
+  <rect x="286" y="376" width="8" height="18" fill="#5A9030"/>
+  <circle cx="330" cy="382" r="9" fill="#FFAA60"/>
+  <rect x="326" y="382" width="8" height="20" fill="#5A9030"/>
+  <circle cx="370" cy="377" r="7" fill="#FF8090"/>
+  <rect x="366" y="377" width="8" height="18" fill="#5A9030"/>
+  <circle cx="408" cy="382" r="9" fill="#FFD060"/>
+  <rect x="404" y="382" width="8" height="20" fill="#5A9030"/>
+  <!-- bee Bela flying -->
+  <!-- bee body -->
+  <ellipse cx="280" cy="220" rx="35" ry="48" fill="#FFD020"/>
+  <!-- stripes -->
+  <rect x="248" y="220" width="64" height="12" rx="6" fill="#2A2A2A" opacity="0.7"/>
+  <rect x="248" y="242" width="64" height="12" rx="6" fill="#2A2A2A" opacity="0.7"/>
+  <!-- bee head -->
+  <circle cx="280" cy="165" r="32" fill="#FFD020"/>
+  <!-- antennae -->
+  <line x1="268" y1="140" x2="255" y2="118" stroke="#4A3010" stroke-width="2.5"/>
+  <circle cx="253" cy="116" r="5" fill="#FF4060"/>
+  <line x1="292" y1="140" x2="305" y2="118" stroke="#4A3010" stroke-width="2.5"/>
+  <circle cx="307" cy="116" r="5" fill="#FF4060"/>
+  <!-- bee face -->
+  <ellipse cx="270" cy="165" rx="5" ry="6" fill="#2A2A2A"/>
+  <ellipse cx="290" cy="165" rx="5" ry="6" fill="#2A2A2A"/>
+  <circle cx="272" cy="162.5" r="2" fill="#fff"/>
+  <circle cx="292" cy="162.5" r="2" fill="#fff"/>
+  <!-- happy bee smile -->
+  <path d="M270 177 Q280 186 290 177" stroke="#4A2A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="263" cy="172" r="6" fill="#FFB0A0" opacity="0.6"/>
+  <circle cx="297" cy="172" r="6" fill="#FFB0A0" opacity="0.6"/>
+  <!-- wings -->
+  <ellipse cx="232" cy="200" rx="45" ry="25" fill="#C8F0FF" opacity="0.7" transform="rotate(-25 232 200)"/>
+  <ellipse cx="328" cy="200" rx="45" ry="25" fill="#C8F0FF" opacity="0.7" transform="rotate(25 328 200)"/>
+  <!-- flower pin/decoration on bee -->
+  <circle cx="296" cy="224" r="8" fill="#FF8090"/>
+  <!-- bee tiny mailbox held -->
+  <rect x="248" y="248" width="22" height="18" rx="4" fill="#FFE090"/>
+  <rect x="252" y="244" width="14" height="6" rx="3" fill="#E8C060"/>
+  <!-- little envelope inside -->
+  <rect x="251" y="251" width="16" height="12" rx="2" fill="#FFF8E0"/>
+  <path d="M251 251 L259 257 L267 251" stroke="#D0A860" stroke-width="1" fill="none"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF0F8">
+  <p>— "Eu conheço essa letra!" — gritou Pip, animado. — "A Abelha Bela mora logo ali no jardim das flores!"</p>
+  <p style="margin-top:10px">A Abelha Bela era famosa por fazer o mel mais amarelo e cheiroso de toda a floresta.</p>
+</div>
+</div>
+
+<!-- PAGE 11 -->
+<div class="page" id="page-11" style="background:#E8F5EE">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="540" fill="#C0E8D0"/>
+  <!-- beehive in tree -->
+  <!-- tree trunk -->
+  <rect x="175" y="200" width="80" height="320" rx="20" fill="#8A6030"/>
+  <!-- tree top -->
+  <ellipse cx="215" cy="160" rx="130" ry="110" fill="#4A9040"/>
+  <ellipse cx="155" cy="200" rx="80" ry="70" fill="#5AA050"/>
+  <ellipse cx="275" cy="195" rx="85" ry="72" fill="#5AA050"/>
+  <!-- beehive hanging from branch -->
+  <rect x="192" y="80" width="46" height="4" rx="2" fill="#8A6030"/>
+  <rect x="213" y="38" width="4" height="44" rx="2" fill="#C89040"/>
+  <!-- hive shape -->
+  <ellipse cx="215" cy="38" rx="36" ry="42" fill="#E8C040"/>
+  <!-- hive stripes/lines -->
+  <path d="M183,25 Q215,15 247,25" stroke="#D0A820" stroke-width="2" fill="none"/>
+  <path d="M180,38 Q215,28 250,38" stroke="#D0A820" stroke-width="2" fill="none"/>
+  <path d="M183,51 Q215,41 247,51" stroke="#D0A820" stroke-width="2" fill="none"/>
+  <path d="M188,64 Q215,54 242,64" stroke="#D0A820" stroke-width="2" fill="none"/>
+  <!-- entrance hole -->
+  <ellipse cx="215" cy="58" rx="10" ry="7" fill="#A07010"/>
+  <!-- bees around -->
+  <ellipse cx="150" cy="140" rx="12" ry="8" fill="#FFD020"/>
+  <rect x="140" y="134" width="20" height="6" rx="3" fill="#2A2A2A" opacity="0.5"/>
+  <ellipse cx="140" cy="138" rx="14" ry="7" fill="#C8F0FF" opacity="0.6" transform="rotate(-15 140 138)"/>
+  <ellipse cx="162" cy="138" rx="14" ry="7" fill="#C8F0FF" opacity="0.6" transform="rotate(15 162 138)"/>
+  <!-- pip and bear looking up together -->
+  <!-- bear -->
+  <ellipse cx="130" cy="490" rx="38" ry="22" fill="#C08848"/>
+  <ellipse cx="130" cy="446" rx="34" ry="42" fill="#C08848"/>
+  <circle cx="130" cy="396" r="36" fill="#C08848"/>
+  <circle cx="106" cy="368" r="14" fill="#C08848"/>
+  <circle cx="106" cy="368" r="9" fill="#A07040"/>
+  <circle cx="154" cy="368" r="14" fill="#C08848"/>
+  <circle cx="154" cy="368" r="9" fill="#A07040"/>
+  <ellipse cx="130" cy="409" rx="18" ry="12" fill="#D0A870"/>
+  <ellipse cx="130" cy="403" rx="7" ry="5" fill="#4A2A10"/>
+  <ellipse cx="119" cy="392" rx="4" ry="4.5" fill="#3D2010"/>
+  <ellipse cx="141" cy="392" rx="4" ry="4.5" fill="#3D2010"/>
+  <circle cx="121" cy="390" r="1.6" fill="#fff"/>
+  <circle cx="143" cy="390" r="1.6" fill="#fff"/>
+  <path d="M122 415 Q130 423 138 415" stroke="#4A2A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="110" cy="450" rx="16" ry="8" fill="#C08848" transform="rotate(-15 110 450)"/>
+  <ellipse cx="150" cy="447" rx="16" ry="8" fill="#C08848" transform="rotate(15 150 447)"/>
+  <!-- Pip next to bear -->
+  <circle cx="305" cy="408" r="18" fill="#FFCF98"/>
+  <rect x="293" y="390" width="20" height="5.5" rx="2.8" fill="#4A90D9"/>
+  <rect x="297" y="379" width="14" height="13" rx="3" fill="#3A7BC8"/>
+  <ellipse cx="299" cy="407" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <ellipse cx="311" cy="407" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <circle cx="300.5" cy="405.5" r="1" fill="#fff"/>
+  <circle cx="312.5" cy="405.5" r="1" fill="#fff"/>
+  <path d="M299 416 Q305 423 311 416" stroke="#A0603A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="305" cy="428" rx="18" ry="20" fill="#FFD0A0"/>
+  <ellipse cx="286" cy="434" rx="14" ry="6" fill="#FFD0A0" transform="rotate(-10 286 434)"/>
+  <ellipse cx="323" cy="431" rx="14" ry="6" fill="#FFD0A0" transform="rotate(10 323 431)"/>
+  <ellipse cx="299" cy="446" rx="8" ry="4.5" fill="#4A90D9" transform="rotate(5 299 446)"/>
+  <ellipse cx="313" cy="448" rx="8" ry="4.5" fill="#4A90D9" transform="rotate(-5 313 448)"/>
+</svg>
+</div>
+<div class="text-box" style="background:#E8F5EE">
+  <p>— "Vamos entregar juntos?" — perguntou Pip para Bernardo.</p>
+  <p style="margin-top:8px">E assim, o urso grande e o carteirinho pequeno foram caminhando, lado a lado, pelo caminho do mel.</p>
+</div>
+</div>
+
+<!-- PAGE 12 -->
+<div class="page" id="page-12">
+<svg viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+  <rect width="430" height="932" fill="#D8ECC8"/>
+  <!-- lush path through nature -->
+  <!-- sky -->
+  <rect x="0" y="0" width="430" height="400" fill="#B8DCF0"/>
+  <!-- ground path -->
+  <rect x="0" y="400" width="430" height="532" fill="#A0C870"/>
+  <!-- dirt path -->
+  <path d="M160,400 Q150,600 140,932" stroke="#D0B880" stroke-width="70" fill="none" opacity="0.7"/>
+  <path d="M270,400 Q280,600 290,932" stroke="#D0B880" stroke-width="70" fill="none" opacity="0.7"/>
+  <!-- trees on sides -->
+  <rect x="20" y="250" width="16" height="220" fill="#6A5020"/>
+  <ellipse cx="28" cy="220" rx="50" ry="60" fill="#4A8840"/>
+  <rect x="380" y="260" width="16" height="210" fill="#6A5020"/>
+  <ellipse cx="388" cy="230" rx="50" ry="58" fill="#4A8040"/>
+  <rect x="60" y="280" width="14" height="200" fill="#5A4820"/>
+  <ellipse cx="67" cy="255" rx="42" ry="50" fill="#5A9040"/>
+  <rect x="355" y="285" width="14" height="195" fill="#5A4820"/>
+  <ellipse cx="362" cy="260" rx="42" ry="48" fill="#5A9040"/>
+  <!-- flowers on sides of path -->
+  <circle cx="140" cy="440" r="7" fill="#FF8090"/>
+  <circle cx="120" cy="465" r="6" fill="#FFD060"/>
+  <circle cx="298" cy="445" r="7" fill="#FF90C0"/>
+  <circle cx="315" cy="470" r="6" fill="#FFAA60"/>
+  <circle cx="130" cy="500" r="5" fill="#A0D060"/>
+  <circle cx="305" cy="508" r="5" fill="#FF8090"/>
+  <!-- butterflies -->
+  <ellipse cx="100" cy="380" rx="14" ry="8" fill="#FFB0E0" opacity="0.8" transform="rotate(-20 100 380)"/>
+  <ellipse cx="115" cy="380" rx="14" ry="8" fill="#FFB0E0" opacity="0.8" transform="rotate(20 115 380)"/>
+  <ellipse cx="340" cy="360" rx="12" ry="7" fill="#B0D0FF" opacity="0.8" transform="rotate(-15 340 360)"/>
+  <ellipse cx="353" cy="360" rx="12" ry="7" fill="#B0D0FF" opacity="0.8" transform="rotate(15 353 360)"/>
+  <!-- Bear and Pip walking on path, from behind/side, small, in distance -->
+  <!-- bear walking -->
+  <ellipse cx="215" cy="650" rx="30" ry="18" fill="#C08848"/>
+  <ellipse cx="215" cy="620" rx="26" ry="30" fill="#C08848"/>
+  <circle cx="215" cy="584" r="25" fill="#C08848"/>
+  <circle cx="197" cy="562" r="10" fill="#C08848"/>
+  <circle cx="197" cy="562" r="7" fill="#A07040"/>
+  <circle cx="233" cy="562" r="10" fill="#C08848"/>
+  <circle cx="233" cy="562" r="7" fill="#A07040"/>
+  <!-- walking pose bear -->
+  <ellipse cx="196" cy="638" rx="12" ry="6" fill="#C08848" transform="rotate(25 196 638)"/>
+  <ellipse cx="233" cy="642" rx="12" ry="6" fill="#C08848" transform="rotate(-20 233 642)"/>
+  <!-- Pip tiny next to bear, slightly in front -->
+  <circle cx="248" cy="596" r="12" fill="#FFCF98"/>
+  <rect x="240" y="584" width="13" height="4" rx="2" fill="#4A90D9"/>
+  <rect x="242" y="577" width="10" height="9" rx="2" fill="#3A7BC8"/>
+  <ellipse cx="244" cy="596" rx="2" ry="2.5" fill="#3D2B1F"/>
+  <ellipse cx="252" cy="596" rx="2" ry="2.5" fill="#3D2B1F"/>
+  <ellipse cx="248" cy="607" rx="12" ry="13" fill="#FFD0A0"/>
+  <ellipse cx="260" cy="611" rx="10" ry="5" fill="#E8C060"/>
+  <!-- little steps showing they walk -->
+  <ellipse cx="245" cy="620" rx="5" ry="3" fill="#4A90D9" transform="rotate(15 245 620)"/>
+  <ellipse cx="253" cy="622" rx="5" ry="3" fill="#4A90D9" transform="rotate(-15 253 622)"/>
+</svg>
+<div class="text-overlay" style="bottom:80px">
+  <div class="bubble">
+    <p>O caminho era cheio de flores coloridas e borboletas curiosas. Pip pulava e Bernardo lá atrás ia devagarzinho, mas contente.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 13 -->
+<div class="page" id="page-13" style="background:#FFFBE8">
+<div class="illustration" style="height:55%">
+<svg viewBox="0 0 430 510" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="510" fill="#F8F0C0"/>
+  <!-- golden meadow, bee garden -->
+  <rect x="0" y="300" width="430" height="210" fill="#C8D890"/>
+  <!-- sunflowers -->
+  <!-- petals -->
+  <circle cx="215" cy="160" r="70" fill="#FFD820" opacity="0.5"/>
+  <circle cx="215" cy="160" r="50" fill="#E8A820"/>
+  <!-- center -->
+  <circle cx="215" cy="160" r="30" fill="#7A4010"/>
+  <!-- stem -->
+  <rect x="210" y="230" width="10" height="90" fill="#5A8820"/>
+  <!-- leaves -->
+  <ellipse cx="195" cy="260" rx="22" ry="12" fill="#5A9020" transform="rotate(-30 195 260)"/>
+  <ellipse cx="232" cy="275" rx="22" ry="12" fill="#5A9020" transform="rotate(30 232 275)"/>
+  <!-- more sunflowers smaller -->
+  <circle cx="90" cy="220" r="45" fill="#FFD820" opacity="0.5"/>
+  <circle cx="90" cy="220" r="33" fill="#E8A820"/>
+  <circle cx="90" cy="220" r="20" fill="#7A4010"/>
+  <rect x="86" y="265" width="8" height="60" fill="#5A8820"/>
+  <circle cx="355" cy="210" r="48" fill="#FFD820" opacity="0.5"/>
+  <circle cx="355" cy="210" r="35" fill="#E8A820"/>
+  <circle cx="355" cy="210" r="22" fill="#7A4010"/>
+  <rect x="351" y="258" width="8" height="65" fill="#5A8820"/>
+  <!-- Bela the bee large and friendly looking at pip and bear arriving -->
+  <ellipse cx="215" cy="390" rx="28" ry="38" fill="#FFD020"/>
+  <rect x="190" y="380" width="50" height="10" rx="5" fill="#2A2A2A" opacity="0.65"/>
+  <rect x="190" y="400" width="50" height="10" rx="5" fill="#2A2A2A" opacity="0.65"/>
+  <circle cx="215" cy="345" r="26" fill="#FFD020"/>
+  <line x1="205" y1="324" x2="194" y2="304" stroke="#4A3010" stroke-width="2"/>
+  <circle cx="192" cy="302" r="4.5" fill="#FF4060"/>
+  <line x1="225" y1="324" x2="236" y2="304" stroke="#4A3010" stroke-width="2"/>
+  <circle cx="238" cy="302" r="4.5" fill="#FF4060"/>
+  <ellipse cx="206" cy="345" rx="4.5" ry="5.5" fill="#2A2A2A"/>
+  <ellipse cx="224" cy="345" rx="4.5" ry="5.5" fill="#2A2A2A"/>
+  <circle cx="208" cy="342.5" r="1.8" fill="#fff"/>
+  <circle cx="226" cy="342.5" r="1.8" fill="#fff"/>
+  <path d="M206 357 Q215 366 224 357" stroke="#4A2A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="200" cy="352" r="5.5" fill="#FFB0A0" opacity="0.6"/>
+  <circle cx="230" cy="352" r="5.5" fill="#FFB0A0" opacity="0.6"/>
+  <ellipse cx="180" cy="370" rx="36" ry="20" fill="#C8F0FF" opacity="0.75" transform="rotate(-20 180 370)"/>
+  <ellipse cx="250" cy="370" rx="36" ry="20" fill="#C8F0FF" opacity="0.75" transform="rotate(20 250 370)"/>
+  <!-- arms waving hello -->
+  <ellipse cx="178" cy="392" rx="18" ry="8" fill="#FFD020" transform="rotate(-35 178 392)"/>
+  <ellipse cx="252" cy="388" rx="18" ry="8" fill="#FFD020" transform="rotate(35 252 388)"/>
+  <!-- pip small far left -->
+  <circle cx="50" cy="398" r="11" fill="#FFCF98"/>
+  <rect x="42" y="387" width="13" height="4" rx="2" fill="#4A90D9"/>
+  <rect x="44" y="380" width="9" height="9" rx="2" fill="#3A7BC8"/>
+  <ellipse cx="46" cy="398" rx="2" ry="2.5" fill="#3D2B1F"/>
+  <ellipse cx="54" cy="398" rx="2" ry="2.5" fill="#3D2B1F"/>
+  <path d="M46 405 Q50 410 54 405" stroke="#A0603A" stroke-width="1.2" fill="none"/>
+  <ellipse cx="50" cy="410" rx="11" ry="12" fill="#FFD0A0"/>
+  <!-- bear far left -->
+  <ellipse cx="100" cy="425" rx="22" ry="14" fill="#C08848"/>
+  <ellipse cx="100" cy="402" rx="20" ry="25" fill="#C08848"/>
+  <circle cx="100" cy="375" r="21" fill="#C08848"/>
+  <circle cx="87" cy="358" r="8" fill="#C08848"/>
+  <circle cx="87" cy="358" r="5.5" fill="#A07040"/>
+  <circle cx="113" cy="358" r="8" fill="#C08848"/>
+  <circle cx="113" cy="358" r="5.5" fill="#A07040"/>
+  <path d="M93 382 Q100 390 107 382" stroke="#4A2A10" stroke-width="2" fill="none" stroke-linecap="round"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFFBE8">
+  <p>A Abelha Bela estava esperando entre os girassóis, com as asinhas agitando de animação.</p>
+  <p style="margin-top:10px">— "Vocês chegaram! Que surpresa maravilhosa!" — ela cantarolou.</p>
+</div>
+</div>
+
+<!-- PAGE 14 -->
+<div class="page" id="page-14" style="background:#FFF5E0">
+<div class="illustration" style="height:56%">
+<svg viewBox="0 0 430 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="520" fill="#F0E4B0"/>
+  <!-- warm kitchen/inside of bee home -->
+  <rect x="0" y="320" width="430" height="200" fill="#C8A060"/>
+  <!-- walls -->
+  <rect x="0" y="0" width="430" height="320" fill="#F8E8B8"/>
+  <!-- hexagon wall pattern -->
+  <polygon points="60,60 80,46 100,60 100,88 80,102 60,88" fill="none" stroke="#E0C878" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="100,60 120,46 140,60 140,88 120,102 100,88" fill="none" stroke="#E0C878" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="140,60 160,46 180,60 180,88 160,102 140,88" fill="none" stroke="#E0C878" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="300,40 320,26 340,40 340,68 320,82 300,68" fill="none" stroke="#E0C878" stroke-width="1.5" opacity="0.5"/>
+  <polygon points="340,40 360,26 380,40 380,68 360,82 340,68" fill="none" stroke="#E0C878" stroke-width="1.5" opacity="0.5"/>
+  <!-- honey table -->
+  <rect x="100" y="260" width="230" height="16" rx="5" fill="#8A6020"/>
+  <rect x="130" y="276" width="12" height="50" rx="3" fill="#8A6020"/>
+  <rect x="288" y="276" width="12" height="50" rx="3" fill="#8A6020"/>
+  <!-- pots of honey on table -->
+  <ellipse cx="165" cy="252" rx="22" ry="26" fill="#E8B820"/>
+  <rect x="148" y="228" width="34" height="28" rx="8" fill="#E8B820"/>
+  <ellipse cx="165" cy="228" rx="17" ry="7" fill="#F8D040"/>
+  <ellipse cx="210" cy="250" rx="18" ry="22" fill="#F0C020"/>
+  <rect x="196" y="230" width="28" height="24" rx="7" fill="#F0C020"/>
+  <ellipse cx="210" cy="230" rx="14" ry="6" fill="#FFD840"/>
+  <ellipse cx="250" cy="253" rx="22" ry="25" fill="#D8A810"/>
+  <rect x="232" y="230" width="36" height="26" rx="8" fill="#D8A810"/>
+  <ellipse cx="250" cy="230" rx="18" ry="7" fill="#EFC030"/>
+  <!-- bela serving honey to bear -->
+  <!-- Bela small serving -->
+  <ellipse cx="130" cy="355" rx="18" ry="25" fill="#FFD020"/>
+  <rect x="115" y="345" width="30" height="7" rx="3.5" fill="#2A2A2A" opacity="0.6"/>
+  <circle cx="130" cy="325" r="18" fill="#FFD020"/>
+  <ellipse cx="122" cy="325" rx="3.5" ry="4" fill="#2A2A2A"/>
+  <ellipse cx="138" cy="325" rx="3.5" ry="4" fill="#2A2A2A"/>
+  <path d="M122 334 Q130 341 138 334" stroke="#4A2A10" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="105" cy="345" rx="22" ry="11" fill="#C8F0FF" opacity="0.7" transform="rotate(-18 105 345)"/>
+  <ellipse cx="155" cy="345" rx="22" ry="11" fill="#C8F0FF" opacity="0.7" transform="rotate(18 155 345)"/>
+  <!-- spoon with honey -->
+  <line x1="148" y1="330" x2="180" y2="290" stroke="#A07020" stroke-width="3" stroke-linecap="round"/>
+  <ellipse cx="182" cy="288" rx="10" ry="7" fill="#F8D040"/>
+  <!-- drip -->
+  <ellipse cx="168" cy="308" rx="4" ry="5" fill="#EFC030" opacity="0.8"/>
+  <!-- Bear happy receiving (bear from before, slightly smaller) -->
+  <ellipse cx="310" cy="390" rx="36" ry="20" fill="#C08848"/>
+  <ellipse cx="310" cy="355" rx="32" ry="38" fill="#C08848"/>
+  <circle cx="310" cy="308" r="34" fill="#C08848"/>
+  <circle cx="288" cy="282" r="13" fill="#C08848"/>
+  <circle cx="288" cy="282" r="8" fill="#A07040"/>
+  <circle cx="332" cy="282" r="13" fill="#C08848"/>
+  <circle cx="332" cy="282" r="8" fill="#A07040"/>
+  <ellipse cx="310" cy="320" rx="17" ry="12" fill="#D0A870"/>
+  <ellipse cx="310" cy="314" rx="7" ry="5" fill="#4A2A10"/>
+  <!-- huge happy smile -->
+  <path d="M296 327 Q310 338 324 327" stroke="#4A2A10" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- eyes crinkled happy -->
+  <path d="M298 305 Q303 300 308 305" stroke="#3D2010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M312 305 Q317 300 322 305" stroke="#3D2010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="295" cy="316" r="8" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="325" cy="316" r="8" fill="#FFB0A0" opacity="0.55"/>
+  <!-- paw outstretched -->
+  <ellipse cx="278" cy="358" rx="18" ry="9" fill="#C08848" transform="rotate(20 278 358)"/>
+  <!-- Pip watching from side, small, happy -->
+  <circle cx="55" cy="345" r="14" fill="#FFCF98"/>
+  <rect x="45" y="331" width="16" height="5" rx="2.5" fill="#4A90D9"/>
+  <rect x="49" y="322" width="12" height="11" rx="2.5" fill="#3A7BC8"/>
+  <ellipse cx="50" cy="344" rx="2.5" ry="3" fill="#3D2B1F"/>
+  <ellipse cx="61" cy="344" rx="2.5" ry="3" fill="#3D2B1F"/>
+  <path d="M50 352 Q56 359 62 352" stroke="#A0603A" stroke-width="1.5" fill="none"/>
+  <ellipse cx="56" cy="362" rx="14" ry="15" fill="#FFD0A0"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF5E0">
+  <p>A Abelha Bela tinha preparado um pote de mel fresquinho especialmente para Bernardo. E ainda tinha mel de lavanda, mel de girassol e até mel de trevo!</p>
+</div>
+</div>
+
+<!-- PAGE 15 -->
+<div class="page" id="page-15" style="background:#F0F8FF">
+<div class="illustration" style="height:52%">
+<svg viewBox="0 0 430 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="480" fill="#E0F0FF"/>
+  <!-- Pip suddenly realizes he has many more letters to deliver! -->
+  <!-- his bag spills open with lots of envelopes floating -->
+  <ellipse cx="215" cy="280" rx="55" ry="65" fill="#E8C060"/>
+  <ellipse cx="215" cy="222" rx="28" ry="14" fill="#D4A840"/>
+  <!-- envelopes flying out -->
+  <g transform="rotate(-25 120 200)">
+    <rect x="100" y="186" width="40" height="30" rx="4" fill="#FFF8F0" stroke="#E0C090" stroke-width="1.5"/>
+    <path d="M100 186 L120 201 L140 186" stroke="#E0C090" stroke-width="1.5" fill="none"/>
+  </g>
+  <g transform="rotate(15 310 180)">
+    <rect x="290" y="165" width="40" height="30" rx="4" fill="#F0F8FF" stroke="#90C0E0" stroke-width="1.5"/>
+    <path d="M290 165 L310 180 L330 165" stroke="#90C0E0" stroke-width="1.5" fill="none"/>
+  </g>
+  <g transform="rotate(-10 175 140)">
+    <rect x="155" y="126" width="40" height="30" rx="4" fill="#FFF0F8" stroke="#E090B0" stroke-width="1.5"/>
+    <path d="M155 126 L175 141 L195 126" stroke="#E090B0" stroke-width="1.5" fill="none"/>
+  </g>
+  <g transform="rotate(30 280 130)">
+    <rect x="260" y="116" width="36" height="28" rx="4" fill="#F8FFF0" stroke="#90D090" stroke-width="1.5"/>
+    <path d="M260 116 L278 131 L296 116" stroke="#90D090" stroke-width="1.5" fill="none"/>
+  </g>
+  <g transform="rotate(-20 90 280)">
+    <rect x="68" y="266" width="44" height="32" rx="4" fill="#FFF8E0" stroke="#D0B060" stroke-width="1.5"/>
+    <path d="M68 266 L90 282 L112 266" stroke="#D0B060" stroke-width="1.5" fill="none"/>
+  </g>
+  <g transform="rotate(8 340 270)">
+    <rect x="318" y="256" width="44" height="32" rx="4" fill="#F0E8FF" stroke="#A080C0" stroke-width="1.5"/>
+    <path d="M318 256 L340 272 L362 256" stroke="#A080C0" stroke-width="1.5" fill="none"/>
+  </g>
+  <!-- Pip looking at bag with wide eyes -->
+  <circle cx="215" cy="195" r="22" fill="#FFCF98"/>
+  <rect x="202" y="174" width="24" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="206" y="162" width="18" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- surprised wide eyes -->
+  <ellipse cx="208" cy="195" rx="5" ry="6" fill="#3D2B1F"/>
+  <ellipse cx="222" cy="195" rx="5" ry="6" fill="#3D2B1F"/>
+  <circle cx="210" cy="192" r="2" fill="#fff"/>
+  <circle cx="224" cy="192" r="2" fill="#fff"/>
+  <!-- O mouth surprised/comical -->
+  <ellipse cx="215" cy="206" rx="5" ry="6" fill="#A0603A"/>
+  <ellipse cx="215" cy="220" rx="22" ry="26" fill="#FFD0A0"/>
+  <!-- arms up surprised -->
+  <ellipse cx="187" cy="226" rx="20" ry="8" fill="#FFD0A0" transform="rotate(-50 187 226)"/>
+  <ellipse cx="243" cy="223" rx="20" ry="8" fill="#FFD0A0" transform="rotate(50 243 223)"/>
+  <!-- tiny sweat drop -->
+  <ellipse cx="236" cy="183" rx="4" ry="5.5" fill="#90C8E8" opacity="0.8"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F0F8FF">
+  <p>De repente, Pip abriu a mochila e percebeu... havia ainda MUITAS cartas para entregar!</p>
+  <p style="margin-top:10px;color:#4060A0;font-style:italic">— "Ai, ai! Ainda tenho a carta do Coelho Tobias, da Raposa Rô, do Porco-Espinho Pim..."</p>
+</div>
+</div>
+
+<!-- PAGE 16 -->
+<div class="page" id="page-16" style="background:#E8F0F8">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="540" fill="#C8DFF0"/>
+  <!-- more scenes, river -->
+  <!-- sky -->
+  <rect x="0" y="0" width="430" height="300" fill="#C0DCF0"/>
+  <!-- hills -->
+  <ellipse cx="100" cy="310" rx="180" ry="100" fill="#B0D898"/>
+  <ellipse cx="350" cy="320" rx="200" ry="110" fill="#A8D090"/>
+  <!-- river -->
+  <path d="M0,380 Q80,340 215,350 Q350,360 430,330" stroke="#80B8E0" stroke-width="55" fill="none" stroke-linecap="round"/>
+  <!-- river shimmer -->
+  <path d="M50,360 Q100,355 150,365" stroke="#A0D0F0" stroke-width="2" fill="none" opacity="0.7"/>
+  <path d="M200,352 Q250,347 300,357" stroke="#A0D0F0" stroke-width="2" fill="none" opacity="0.7"/>
+  <!-- rabbit Tobias at river bank -->
+  <ellipse cx="100" cy="438" rx="28" ry="18" fill="#F0E8E0"/>
+  <ellipse cx="100" cy="408" rx="24" ry="30" fill="#F0E8E0"/>
+  <circle cx="100" cy="372" r="22" fill="#F0E8E0"/>
+  <!-- rabbit ears -->
+  <ellipse cx="90" cy="335" rx="8" ry="26" fill="#F0E8E0"/>
+  <ellipse cx="90" cy="335" rx="5" ry="20" fill="#FFD0D0"/>
+  <ellipse cx="110" cy="333" rx="8" ry="26" fill="#F0E8E0"/>
+  <ellipse cx="110" cy="333" rx="5" ry="20" fill="#FFD0D0"/>
+  <!-- rabbit face -->
+  <ellipse cx="92" cy="373" rx="3.5" ry="4" fill="#4A3020"/>
+  <ellipse cx="108" cy="373" rx="3.5" ry="4" fill="#4A3020"/>
+  <circle cx="93.5" cy="371.5" r="1.2" fill="#fff"/>
+  <circle cx="109.5" cy="371.5" r="1.2" fill="#fff"/>
+  <ellipse cx="100" cy="381" rx="5" ry="3.5" fill="#FFB0A0"/>
+  <path d="M95 384 Q100 389 105 384" stroke="#8A5040" stroke-width="1.5" fill="none"/>
+  <circle cx="88" cy="380" r="4" fill="#FFB0A0" opacity="0.5"/>
+  <circle cx="112" cy="380" r="4" fill="#FFB0A0" opacity="0.5"/>
+  <!-- rabbit arms receiving letter happy -->
+  <ellipse cx="76" cy="415" rx="16" ry="7" fill="#F0E8E0" transform="rotate(-25 76 415)"/>
+  <ellipse cx="124" cy="412" rx="16" ry="7" fill="#F0E8E0" transform="rotate(25 124 412)"/>
+  <!-- Pip flying over river delivering letter -->
+  <circle cx="280" cy="290" r="18" fill="#FFCF98"/>
+  <rect x="268" y="272" width="20" height="5.5" rx="2.8" fill="#4A90D9"/>
+  <rect x="272" y="261" width="14" height="13" rx="3" fill="#3A7BC8"/>
+  <ellipse cx="274" cy="290" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <ellipse cx="286" cy="290" rx="3" ry="3.5" fill="#3D2B1F"/>
+  <path d="M274 299 Q280 306 286 299" stroke="#A0603A" stroke-width="1.5" fill="none"/>
+  <circle cx="270" cy="296" r="4" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="290" cy="296" r="4" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="280" cy="311" rx="18" ry="20" fill="#FFD0A0"/>
+  <!-- arms swooping down -->
+  <ellipse cx="256" cy="310" rx="20" ry="8" fill="#FFD0A0" transform="rotate(-40 256 310)"/>
+  <ellipse cx="306" cy="305" rx="20" ry="8" fill="#FFD0A0" transform="rotate(40 306 305)"/>
+  <!-- envelope dropping -->
+  <rect x="270" y="318" width="20" height="14" rx="2.5" fill="#FFFAEE"/>
+  <path d="M270 318 L280 325 L290 318" stroke="#D0A860" stroke-width="1.2" fill="none"/>
+  <!-- bag still full on back -->
+  <ellipse cx="293" cy="308" rx="14" ry="16" fill="#E8C060"/>
+</svg>
+</div>
+<div class="text-box" style="background:#E8F0F8">
+  <p>Pip foi voando rápido para o rio. O Coelho Tobias já esperava na margem, pulando de um pé para o outro de expectativa.</p>
+</div>
+</div>
+
+<!-- PAGE 17 -->
+<div class="page" id="page-17" style="background:#F5F0FF">
+<div class="illustration" style="height:57%">
+<svg viewBox="0 0 430 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="530" fill="#E0D8F8"/>
+  <!-- hilltop scene with fox Ro -->
+  <!-- sky -->
+  <rect x="0" y="0" width="430" height="280" fill="#C8C0F0"/>
+  <!-- big rock/hill -->
+  <ellipse cx="250" cy="380" rx="220" ry="150" fill="#D0C8A0"/>
+  <ellipse cx="80" cy="420" rx="140" ry="120" fill="#C8C098"/>
+  <!-- some pebbles -->
+  <ellipse cx="180" cy="400" rx="20" ry="10" fill="#B8B088"/>
+  <ellipse cx="320" cy="420" rx="14" ry="7" fill="#B0A880"/>
+  <ellipse cx="240" cy="430" rx="18" ry="9" fill="#C0B890"/>
+  <!-- Fox Ro - orange red fox sitting on rock -->
+  <!-- fox body -->
+  <ellipse cx="280" cy="330" rx="34" ry="42" fill="#E07028"/>
+  <!-- fox tail big fluffy -->
+  <ellipse cx="248" cy="365" rx="38" ry="22" fill="#E07028" transform="rotate(-30 248 365)"/>
+  <!-- tail tip white -->
+  <ellipse cx="225" cy="352" rx="18" ry="12" fill="#F8F0E8" transform="rotate(-30 225 352)"/>
+  <!-- fox head -->
+  <ellipse cx="280" cy="270" rx="32" ry="36" fill="#E07028"/>
+  <!-- snout -->
+  <ellipse cx="280" cy="292" rx="16" ry="12" fill="#F8D0A8"/>
+  <!-- fox ears -->
+  <polygon points="255,248 242,210 270,242" fill="#E07028"/>
+  <polygon points="257,246 247,218 268,240" fill="#D05018"/>
+  <polygon points="305,248 318,210 290,242" fill="#E07028"/>
+  <polygon points="303,246 313,218 292,240" fill="#D05018"/>
+  <!-- fox eyes -->
+  <ellipse cx="268" cy="272" rx="5" ry="6" fill="#2A1808"/>
+  <ellipse cx="292" cy="272" rx="5" ry="6" fill="#2A1808"/>
+  <circle cx="270" cy="269.5" r="2" fill="#fff"/>
+  <circle cx="294" cy="269.5" r="2" fill="#fff"/>
+  <!-- fox nose -->
+  <ellipse cx="280" cy="285" rx="6" ry="4.5" fill="#2A1808"/>
+  <!-- fox smile -->
+  <path d="M272 295 Q280 302 288 295" stroke="#2A1808" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="264" cy="288" r="5" fill="#FFB090" opacity="0.5"/>
+  <circle cx="296" cy="288" r="5" fill="#FFB090" opacity="0.5"/>
+  <!-- fox paws on envelope -->
+  <ellipse cx="254" cy="342" rx="14" ry="8" fill="#E07028" transform="rotate(15 254 342)"/>
+  <ellipse cx="306" cy="340" rx="14" ry="8" fill="#E07028" transform="rotate(-15 306 340)"/>
+  <!-- letter in paws -->
+  <rect x="255" y="328" width="50" height="36" rx="5" fill="#FFF8E8"/>
+  <path d="M255 328 L280 346 L305 328" stroke="#D0A860" stroke-width="1.8" fill="none"/>
+  <!-- Pip nearby, small, just delivered -->
+  <circle cx="128" cy="350" r="15" fill="#FFCF98"/>
+  <rect x="118" y="336" width="16" height="4.5" rx="2.2" fill="#4A90D9"/>
+  <rect x="121" y="328" width="11" height="10" rx="2" fill="#3A7BC8"/>
+  <ellipse cx="123" cy="350" rx="2.5" ry="3" fill="#3D2B1F"/>
+  <ellipse cx="133" cy="350" rx="2.5" ry="3" fill="#3D2B1F"/>
+  <path d="M123 357 Q128 363 133 357" stroke="#A0603A" stroke-width="1.3" fill="none"/>
+  <ellipse cx="128" cy="367" rx="15" ry="16" fill="#FFD0A0"/>
+  <ellipse cx="142" cy="370" rx="12" ry="6" fill="#E8C060"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F5F0FF">
+  <p>No topo da colinha, a Raposa Rô rasgou o envelope com cuidado e leu a carta com olhos brilhantes.</p>
+  <p style="margin-top:10px">Era uma mensagem da amiga dela que estava viajando para bem longe.</p>
+</div>
+</div>
+
+<!-- PAGE 18 -->
+<div class="page" id="page-18" style="background:#F0F8F0">
+<div class="illustration" style="height:56%">
+<svg viewBox="0 0 430 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="520" fill="#D8EED8"/>
+  <!-- more deliveries montage feel -->
+  <!-- quick multiple scenes panel feel with one main and small vignettes -->
+  <!-- main: hedgehog Pim receiving -->
+  <!-- ground, mushrooms, forest floor -->
+  <rect x="0" y="340" width="430" height="180" fill="#98B870"/>
+  <!-- big mushrooms -->
+  <rect x="185" y="320" width="14" height="60" fill="#D0A870"/>
+  <ellipse cx="192" cy="318" rx="42" ry="28" fill="#E04040"/>
+  <!-- white spots -->
+  <circle cx="178" cy="308" r="6" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="200" cy="303" r="5" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="212" cy="312" r="4.5" fill="#FFFFFF" opacity="0.8"/>
+  <circle cx="186" cy="318" r="4" fill="#FFFFFF" opacity="0.8"/>
+  <!-- small mushrooms -->
+  <rect x="300" y="350" width="8" height="28" fill="#C09060"/>
+  <ellipse cx="304" cy="348" rx="22" ry="16" fill="#D07030"/>
+  <circle cx="294" cy="341" r="4" fill="#FFFFFF" opacity="0.7"/>
+  <circle cx="308" cy="338" r="3.5" fill="#FFFFFF" opacity="0.7"/>
+  <!-- Hedgehog Pim - round spiky, brown -->
+  <ellipse cx="130" cy="400" rx="48" ry="36" fill="#7A5028"/>
+  <!-- spines top -->
+  <line x1="100" y1="378" x2="90" y2="355" stroke="#6A4020" stroke-width="2.5"/>
+  <line x1="115" y1="370" x2="108" y2="346" stroke="#6A4020" stroke-width="2.5"/>
+  <line x1="130" y1="367" x2="128" y2="342" stroke="#6A4020" stroke-width="2.5"/>
+  <line x1="145" y1="370" x2="152" y2="345" stroke="#6A4020" stroke-width="2.5"/>
+  <line x1="160" y1="378" x2="170" y2="355" stroke="#6A4020" stroke-width="2.5"/>
+  <!-- face part lighter -->
+  <ellipse cx="100" cy="408" rx="28" ry="24" fill="#C09860"/>
+  <!-- eyes -->
+  <ellipse cx="90" cy="405" rx="4" ry="4.5" fill="#2A1808"/>
+  <ellipse cx="108" cy="405" rx="4" ry="4.5" fill="#2A1808"/>
+  <circle cx="91.5" cy="403.5" r="1.5" fill="#fff"/>
+  <circle cx="109.5" cy="403.5" r="1.5" fill="#fff"/>
+  <!-- nose small round -->
+  <ellipse cx="99" cy="413" rx="5" ry="4" fill="#2A1808"/>
+  <!-- happy mouth -->
+  <path d="M93 418 Q99 424 105 418" stroke="#2A1808" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <!-- tiny paws -->
+  <ellipse cx="78" cy="425" rx="12" ry="7" fill="#C09860" transform="rotate(15 78 425)"/>
+  <ellipse cx="120" cy="427" rx="12" ry="7" fill="#C09860" transform="rotate(-15 120 427)"/>
+  <!-- letter held -->
+  <rect x="76" y="415" width="46" height="32" rx="4.5" fill="#FFFAEE"/>
+  <path d="M76 415 L99 431 L122 415" stroke="#D0B070" stroke-width="1.5" fill="none"/>
+  <!-- Pip delivering to hedgehog -->
+  <circle cx="290" cy="350" r="17" fill="#FFCF98"/>
+  <rect x="279" y="334" width="19" height="5" rx="2.5" fill="#4A90D9"/>
+  <rect x="283" y="324" width="13" height="12" rx="2.5" fill="#3A7BC8"/>
+  <ellipse cx="285" cy="349" rx="2.8" ry="3.2" fill="#3D2B1F"/>
+  <ellipse cx="296" cy="349" rx="2.8" ry="3.2" fill="#3D2B1F"/>
+  <path d="M285 358 Q290 364 295 358" stroke="#A0603A" stroke-width="1.4" fill="none"/>
+  <ellipse cx="290" cy="370" rx="17" ry="18" fill="#FFD0A0"/>
+  <!-- arms delivering -->
+  <ellipse cx="272" cy="372" rx="16" ry="7" fill="#FFD0A0" transform="rotate(-30 272 372)"/>
+  <ellipse cx="308" cy="368" rx="16" ry="7" fill="#FFD0A0" transform="rotate(30 308 368)"/>
+  <!-- count of letters: "2 more!" speech bubble -->
+  <rect x="310" y="320" width="80" height="28" rx="10" fill="#FFFFFF" opacity="0.88"/>
+  <text x="350" y="338" text-anchor="middle" font-size="12" fill="#6040A0" font-family="Nunito,sans-serif" font-weight="700">Só mais 2! ✓</text>
+  <polygon points="318,344 310,356 330,344" fill="#FFFFFF" opacity="0.88"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F0F8F0">
+  <p>O Porco-Espinho Pim recebeu a carta com as patinhas quase tremendo de alegria — era um convite para a festa de aniversário do castor!</p>
+</div>
+</div>
+
+<!-- PAGE 19 -->
+<div class="page" id="page-19" style="background:#FFF8F0">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="540" fill="#F8ECD8"/>
+  <!-- evening starts to come - sky turns golden -->
+  <rect x="0" y="0" width="430" height="300" fill="#F0C880"/>
+  <!-- sunset colors -->
+  <ellipse cx="215" cy="0" rx="300" ry="200" fill="#F8A040" opacity="0.4"/>
+  <ellipse cx="50" cy="0" rx="200" ry="150" fill="#FFD060" opacity="0.3"/>
+  <!-- sun low -->
+  <circle cx="70" cy="180" r="55" fill="#FFD040" opacity="0.7"/>
+  <!-- clouds pink -->
+  <ellipse cx="320" cy="80" rx="90" ry="40" fill="#FFB0A0" opacity="0.7"/>
+  <ellipse cx="260" cy="60" rx="60" ry="30" fill="#FFB090" opacity="0.7"/>
+  <ellipse cx="380" cy="110" rx="55" ry="28" fill="#FFC0B0" opacity="0.7"/>
+  <!-- gentle hills silhouette -->
+  <ellipse cx="100" cy="340" rx="200" ry="120" fill="#8AAA60"/>
+  <ellipse cx="350" cy="360" rx="210" ry="130" fill="#7A9A50"/>
+  <!-- Pip up high, almost done, bag nearly empty -->
+  <!-- nearly empty bag -->
+  <ellipse cx="215" cy="230" rx="40" ry="48" fill="#E8C060" opacity="0.9"/>
+  <ellipse cx="215" cy="190" rx="22" ry="12" fill="#D4A840" opacity="0.9"/>
+  <!-- just 1 envelope visible -->
+  <rect x="198" y="195" width="22" height="16" rx="3" fill="#FFFAEE"/>
+  <path d="M198 195 L209 203 L220 195" stroke="#D0A860" stroke-width="1.2" fill="none"/>
+  <!-- Pip flying, golden light, peaceful -->
+  <circle cx="215" cy="165" r="22" fill="#FFCF98"/>
+  <rect x="202" y="145" width="24" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="206" y="133" width="18" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- relaxed happy eyes -->
+  <path d="M208 164 Q212 159 216 164" stroke="#3D2B1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M215 164 Q219 159 223 164" stroke="#3D2B1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- gentle smile -->
+  <path d="M208 173 Q215 181 222 173" stroke="#A0603A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="204" cy="170" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="226" cy="170" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="215" cy="188" rx="22" ry="24" fill="#FFD0A0"/>
+  <!-- arms open gentle breeze -->
+  <ellipse cx="186" cy="192" rx="20" ry="8" fill="#FFD0A0" transform="rotate(-20 186 192)"/>
+  <ellipse cx="244" cy="188" rx="20" ry="8" fill="#FFD0A0" transform="rotate(20 244 188)"/>
+  <!-- legs drift back -->
+  <ellipse cx="209" cy="210" rx="8" ry="4.5" fill="#4A90D9" transform="rotate(10 209 210)"/>
+  <ellipse cx="222" cy="212" rx="8" ry="4.5" fill="#4A90D9" transform="rotate(-10 222 212)"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF8F0">
+  <p>O sol ia descendo, todo dourado, e Pip voava mais devagar, sentindo o vento quentinho da tarde.</p>
+  <p style="margin-top:10px">Só faltava uma carta. A última do dia.</p>
+</div>
+</div>
+
+<!-- PAGE 20 -->
+<div class="page" id="page-20" style="background:#EEF0FF">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="540" fill="#D8DCF8"/>
+  <!-- twilight purple blue sky -->
+  <rect x="0" y="0" width="430" height="300" fill="#C0C8F0"/>
+  <ellipse cx="215" cy="0" rx="300" ry="180" fill="#A8B0E8" opacity="0.5"/>
+  <!-- first star appears -->
+  <circle cx="380" cy="40" r="3" fill="#FFFAE0"/>
+  <circle cx="50" cy="60" r="2.5" fill="#FFFAE0" opacity="0.8"/>
+  <circle cx="300" cy="25" r="2" fill="#FFFAE0" opacity="0.7"/>
+  <!-- small cottage at edge of forest, warm light in window -->
+  <!-- ground -->
+  <rect x="0" y="350" width="430" height="190" fill="#90A870"/>
+  <!-- cottage -->
+  <rect x="270" y="250" width="140" height="130" rx="5" fill="#E8D8C0"/>
+  <polygon points="270,250 410,250 340,185" fill="#C07850"/>
+  <!-- chimney -->
+  <rect x="358" y="186" width="18" height="36" rx="3" fill="#B06840"/>
+  <!-- smoke wisps -->
+  <path d="M367,186 Q358,170 368,155 Q378,140 368,128" stroke="#D0C0B0" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- windows warm -->
+  <rect x="285" y="275" width="36" height="30" rx="4" fill="#FFD070"/>
+  <line x1="303" y1="275" x2="303" y2="305" stroke="#D0A050" stroke-width="1.5"/>
+  <line x1="285" y1="290" x2="321" y2="290" stroke="#D0A050" stroke-width="1.5"/>
+  <rect x="355" y="275" width="36" height="30" rx="4" fill="#FFD070"/>
+  <line x1="373" y1="275" x2="373" y2="305" stroke="#D0A050" stroke-width="1.5"/>
+  <line x1="355" y1="290" x2="391" y2="290" stroke="#D0A050" stroke-width="1.5"/>
+  <!-- door -->
+  <rect x="323" y="325" width="34" height="55" rx="5" fill="#A07040"/>
+  <circle cx="352" cy="353" r="3" fill="#C8A060"/>
+  <!-- garden/fence -->
+  <rect x="265" y="360" width="5" height="20" rx="1.5" fill="#B09060"/>
+  <rect x="405" y="360" width="5" height="20" rx="1.5" fill="#B09060"/>
+  <line x1="267" y1="366" x2="408" y2="366" stroke="#B09060" stroke-width="2.5"/>
+  <!-- flowers in garden -->
+  <circle cx="280" cy="362" r="5" fill="#FF8090"/>
+  <circle cx="296" cy="360" r="4.5" fill="#FFD060"/>
+  <circle cx="398" cy="362" r="5" fill="#FF90C0"/>
+  <!-- Pip approaching cottage with last letter -->
+  <circle cx="120" cy="248" r="20" fill="#FFCF98"/>
+  <rect x="108" y="229" width="22" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="112" y="217" width="16" height="14" rx="3" fill="#3A7BC8"/>
+  <ellipse cx="114" cy="248" rx="3.2" ry="3.7" fill="#3D2B1F"/>
+  <ellipse cx="126" cy="248" rx="3.2" ry="3.7" fill="#3D2B1F"/>
+  <path d="M114 257 Q120 264 126 257" stroke="#A0603A" stroke-width="1.8" fill="none"/>
+  <circle cx="110" cy="254" r="4.5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="130" cy="254" r="4.5" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="120" cy="270" rx="20" ry="22" fill="#FFD0A0"/>
+  <ellipse cx="97" cy="274" rx="18" ry="8" fill="#FFD0A0" transform="rotate(-18 97 274)"/>
+  <ellipse cx="143" cy="270" rx="18" ry="8" fill="#FFD0A0" transform="rotate(18 143 270)"/>
+  <!-- last envelope in hand glow -->
+  <rect x="104" y="282" width="32" height="24" rx="4" fill="#FFFAEE"/>
+  <path d="M104 282 L120 294 L136 282" stroke="#D0A860" stroke-width="1.5" fill="none"/>
+  <!-- golden glow around last letter -->
+  <ellipse cx="120" cy="294" rx="25" ry="18" fill="#FFE090" opacity="0.3"/>
+</svg>
+</div>
+<div class="text-box" style="background:#EEF0FF">
+  <p>A última carta era para alguém que morava em uma casinha pequena, com fumaçinha saindo da chaminé.</p>
+  <p style="margin-top:10px">Pip pousou no portãozinho com cuidado.</p>
+</div>
+</div>
+
+<!-- PAGE 21 -->
+<div class="page" id="page-21" style="background:#FFF0F5">
+<div class="illustration" style="height:56%">
+<svg viewBox="0 0 430 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="520" fill="#F8E8F0"/>
+  <!-- warm pink twilight -->
+  <rect x="0" y="0" width="430" height="280" fill="#F0C8E0"/>
+  <ellipse cx="215" cy="0" rx="280" ry="180" fill="#E8A8C0" opacity="0.35"/>
+  <!-- old owl at the door -->
+  <!-- door open, warm light -->
+  <rect x="160" y="200" width="110" height="280" rx="8" fill="#C8A870"/>
+  <!-- warm inside glow -->
+  <rect x="164" y="204" width="102" height="272" rx="6" fill="#FFE090" opacity="0.7"/>
+  <!-- owl in door frame -->
+  <!-- owl body big fluffy -->
+  <ellipse cx="215" cy="330" rx="42" ry="54" fill="#D0B878"/>
+  <!-- wing pattern -->
+  <ellipse cx="175" cy="340" rx="22" ry="42" fill="#C0A868" transform="rotate(-8 175 340)"/>
+  <ellipse cx="255" cy="340" rx="22" ry="42" fill="#C0A868" transform="rotate(8 255 340)"/>
+  <!-- feather pattern belly -->
+  <ellipse cx="215" cy="350" rx="28" ry="32" fill="#E8D8A0" opacity="0.7"/>
+  <!-- owl head -->
+  <circle cx="215" cy="268" r="40" fill="#D0B878"/>
+  <!-- ear tufts -->
+  <polygon points="198,238 192,212 210,238" fill="#C0A868"/>
+  <polygon points="232,238 238,212 220,238" fill="#C0A868"/>
+  <!-- big owl eyes - round and warm -->
+  <circle cx="200" cy="268" r="18" fill="#FFFBE0"/>
+  <circle cx="230" cy="268" r="18" fill="#FFFBE0"/>
+  <circle cx="200" cy="268" r="13" fill="#D07010"/>
+  <circle cx="230" cy="268" r="13" fill="#D07010"/>
+  <circle cx="200" cy="268" r="8" fill="#2A1808"/>
+  <circle cx="230" cy="268" r="8" fill="#2A1808"/>
+  <circle cx="203" cy="265" r="3" fill="#fff"/>
+  <circle cx="233" cy="265" r="3" fill="#fff"/>
+  <!-- beak -->
+  <polygon points="215,278 208,292 222,292" fill="#D0A020"/>
+  <!-- happy warm expression -->
+  <path d="M190 290 Q215 302 240 290" stroke="#B08018" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <!-- Pip at doorstep looking up at owl small -->
+  <circle cx="215" cy="450" r="16" fill="#FFCF98"/>
+  <rect x="205" y="435" width="17" height="5" rx="2.5" fill="#4A90D9"/>
+  <rect x="208" y="426" width="12" height="11" rx="2.5" fill="#3A7BC8"/>
+  <ellipse cx="210" cy="450" rx="2.5" ry="3" fill="#3D2B1F"/>
+  <ellipse cx="220" cy="450" rx="2.5" ry="3" fill="#3D2B1F"/>
+  <path d="M210 458 Q215 464 220 458" stroke="#A0603A" stroke-width="1.3" fill="none"/>
+  <ellipse cx="215" cy="467" rx="16" ry="17" fill="#FFD0A0"/>
+  <ellipse cx="198" cy="472" rx="12" ry="5.5" fill="#FFD0A0" transform="rotate(-12 198 472)"/>
+  <ellipse cx="232" cy="470" rx="12" ry="5.5" fill="#FFD0A0" transform="rotate(12 232 470)"/>
+  <!-- letter being handed up -->
+  <rect x="204" y="478" width="22" height="16" rx="3" fill="#FFFAEE"/>
+  <path d="M204 478 L215 486 L226 478" stroke="#D0A860" stroke-width="1.2" fill="none"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF0F5">
+  <p>A porta se abriu e apareceu a Coruja Dulce, com seus olhos grandes e dourados cheios de curiosidade.</p>
+  <p style="margin-top:10px">— "Oh! Uma carta para mim?" — ela sussurrou, surpresa.</p>
+</div>
+</div>
+
+<!-- PAGE 22 -->
+<div class="page" id="page-22" style="background:#FFF5E8">
+<div class="illustration" style="height:54%">
+<svg viewBox="0 0 430 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="500" fill="#F5E8D0"/>
+  <!-- inside the owl's cozy home, warm light -->
+  <rect x="0" y="280" width="430" height="220" fill="#D4B880"/>
+  <rect x="0" y="0" width="430" height="280" fill="#F8E8C0"/>
+  <!-- bookshelf -->
+  <rect x="20" y="60" width="180" height="200" rx="5" fill="#A07840"/>
+  <!-- shelves -->
+  <rect x="20" y="110" width="180" height="8" fill="#8A6030"/>
+  <rect x="20" y="168" width="180" height="8" fill="#8A6030"/>
+  <rect x="20" y="226" width="180" height="8" fill="#8A6030"/>
+  <!-- books -->
+  <rect x="28" y="72" width="14" height="36" rx="2" fill="#C04040"/>
+  <rect x="44" y="78" width="12" height="30" rx="2" fill="#4060C0"/>
+  <rect x="58" y="74" width="16" height="34" rx="2" fill="#40A060"/>
+  <rect x="76" y="70" width="12" height="38" rx="2" fill="#C08020"/>
+  <rect x="90" y="76" width="14" height="32" rx="2" fill="#8040C0"/>
+  <rect x="106" y="72" width="12" height="36" rx="2" fill="#C05030"/>
+  <rect x="28" y="120" width="14" height="42" rx="2" fill="#5080C0"/>
+  <rect x="44" y="124" width="12" height="38" rx="2" fill="#A05030"/>
+  <rect x="58" y="118" width="18" height="44" rx="2" fill="#40C080"/>
+  <rect x="78" y="122" width="12" height="40" rx="2" fill="#D06040"/>
+  <!-- lamp warm light -->
+  <rect x="310" y="80" width="12" height="80" fill="#A08040"/>
+  <ellipse cx="316" cy="80" rx="40" ry="28" fill="#FFE8A0" opacity="0.8"/>
+  <ellipse cx="316" cy="80" rx="30" ry="20" fill="#FFD060" opacity="0.6"/>
+  <!-- Owl and Pip inside, reading the letter together -->
+  <!-- Owl sitting in armchair suggested shape -->
+  <ellipse cx="280" cy="340" rx="50" ry="36" fill="#C8B098"/>
+  <ellipse cx="240" cy="330" rx="18" ry="50" fill="#C8B098"/>
+  <ellipse cx="320" cy="330" rx="18" ry="50" fill="#C8B098"/>
+  <!-- owl sitting -->
+  <ellipse cx="280" cy="260" rx="36" ry="46" fill="#D0B878"/>
+  <ellipse cx="252" cy="280" rx="18" ry="36" fill="#C0A868"/>
+  <ellipse cx="308" cy="280" rx="18" ry="36" fill="#C0A868"/>
+  <circle cx="280" cy="228" r="34" fill="#D0B878"/>
+  <ellipse cx="264" cy="228" rx="14" ry="16" fill="#FFFBE0"/>
+  <ellipse cx="296" cy="228" rx="14" ry="16" fill="#FFFBE0"/>
+  <ellipse cx="264" cy="228" rx="10" ry="11" fill="#D07010"/>
+  <ellipse cx="296" cy="228" rx="10" ry="11" fill="#D07010"/>
+  <ellipse cx="264" cy="228" rx="6" ry="7" fill="#2A1808"/>
+  <ellipse cx="296" cy="228" rx="6" ry="7" fill="#2A1808"/>
+  <circle cx="267" cy="224.5" r="2.5" fill="#fff"/>
+  <circle cx="299" cy="224.5" r="2.5" fill="#fff"/>
+  <polygon points="280,240 274,252 286,252" fill="#D0A020"/>
+  <!-- letter held open -->
+  <rect x="248" y="258" width="64" height="48" rx="6" fill="#FFFAEE"/>
+  <path d="M248 258 L280 278 L312 258" stroke="#D0A860" stroke-width="1.5" fill="none"/>
+  <line x1="258" y1="278" x2="302" y2="278" stroke="#C0A060" stroke-width="1.2" opacity="0.6"/>
+  <line x1="258" y1="286" x2="298" y2="286" stroke="#C0A060" stroke-width="1.2" opacity="0.6"/>
+  <line x1="258" y1="294" x2="294" y2="294" stroke="#C0A060" stroke-width="1.2" opacity="0.6"/>
+  <!-- wings holding letter -->
+  <ellipse cx="240" cy="272" rx="14" ry="7" fill="#D0B878" transform="rotate(20 240 272)"/>
+  <ellipse cx="320" cy="270" rx="14" ry="7" fill="#D0B878" transform="rotate(-20 320 270)"/>
+  <!-- tiny Pip on armrest watching -->
+  <circle cx="150" cy="292" r="14" fill="#FFCF98"/>
+  <rect x="141" y="279" width="16" height="4.5" rx="2.2" fill="#4A90D9"/>
+  <rect x="144" y="271" width="11" height="10" rx="2" fill="#3A7BC8"/>
+  <ellipse cx="145" cy="292" rx="2.3" ry="2.7" fill="#3D2B1F"/>
+  <ellipse cx="155" cy="292" rx="2.3" ry="2.7" fill="#3D2B1F"/>
+  <path d="M145 299 Q150 305 155 299" stroke="#A0603A" stroke-width="1.2" fill="none"/>
+  <ellipse cx="150" cy="308" rx="14" ry="14" fill="#FFD0A0"/>
+</svg>
+</div>
+<div class="text-box" style="background:#FFF5E8">
+  <p>A Coruja Dulce convidou Pip para entrar e tomarem um chazinho enquanto ela lia a carta.</p>
+  <p style="margin-top:10px">Era uma mensagem de um sobrinho dela que tinha aprendido a escrever pela primeira vez!</p>
+</div>
+</div>
+
+<!-- PAGE 23 -->
+<div class="page" id="page-23">
+<svg viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+  <rect width="430" height="932" fill="#E8E0F8"/>
+  <!-- dusk purple sky, stars appearing -->
+  <rect x="0" y="0" width="430" height="932" fill="#D0C8F0"/>
+  <rect x="0" y="0" width="430" height="500" fill="#C0B8E8"/>
+  <!-- stars appearing -->
+  <circle cx="60" cy="50" r="2" fill="#FFFAE0"/>
+  <circle cx="380" cy="40" r="2.5" fill="#FFFAE0"/>
+  <circle cx="220" cy="30" r="1.5" fill="#FFFAE0"/>
+  <circle cx="140" cy="80" r="1.8" fill="#FFFAE0"/>
+  <circle cx="320" cy="90" r="1.5" fill="#FFFAE0" opacity="0.8"/>
+  <circle cx="400" cy="130" r="2" fill="#FFFAE0" opacity="0.8"/>
+  <circle cx="30" cy="160" r="1.5" fill="#FFFAE0" opacity="0.7"/>
+  <!-- moon rising -->
+  <circle cx="370" cy="120" r="50" fill="#FFF8D0" opacity="0.85"/>
+  <circle cx="390" cy="105" r="45" fill="#D0C8E8"/>
+  <!-- forest silhouette against dusk -->
+  <ellipse cx="50" cy="600" rx="100" ry="280" fill="#2A2050"/>
+  <ellipse cx="150" cy="580" rx="90" ry="260" fill="#2A2050"/>
+  <ellipse cx="280" cy="590" rx="100" ry="270" fill="#2A2050"/>
+  <ellipse cx="400" cy="605" rx="90" ry="265" fill="#2A2050"/>
+  <!-- Pip flying home high against moon/dusk, silhouette moment, but still colorful -->
+  <circle cx="215" cy="320" r="26" fill="#FFCF98"/>
+  <rect x="201" y="296" width="28" height="8" rx="4" fill="#4A90D9"/>
+  <rect x="205" y="283" width="20" height="15" rx="3.5" fill="#3A7BC8"/>
+  <!-- very happy eyes -->
+  <path d="M207 318 Q212 312 217 318" stroke="#3D2B1F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M214 318 Q219 312 224 318" stroke="#3D2B1F" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- big smile -->
+  <path d="M206 328 Q215 340 224 328" stroke="#A0603A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="201" cy="325" r="6" fill="#FFB0A0" opacity="0.6"/>
+  <circle cx="229" cy="325" r="6" fill="#FFB0A0" opacity="0.6"/>
+  <ellipse cx="215" cy="350" rx="26" ry="28" fill="#FFD0A0"/>
+  <!-- empty bag! -->
+  <ellipse cx="243" cy="348" rx="18" ry="22" fill="#D4A840" opacity="0.6"/>
+  <!-- arms out free, wind in wings -->
+  <ellipse cx="180" cy="355" rx="28" ry="10" fill="#FFD0A0" transform="rotate(-35 180 355)"/>
+  <ellipse cx="252" cy="348" rx="28" ry="10" fill="#FFD0A0" transform="rotate(35 252 348)"/>
+  <!-- legs trailing -->
+  <ellipse cx="208" cy="376" rx="10" ry="5.5" fill="#4A90D9" transform="rotate(15 208 376)"/>
+  <ellipse cx="224" cy="379" rx="10" ry="5.5" fill="#4A90D9" transform="rotate(-15 224 379)"/>
+  <!-- sparkle/glow around pip -->
+  <circle cx="170" cy="310" r="4" fill="#FFE890" opacity="0.7"/>
+  <circle cx="265" cy="305" r="3.5" fill="#FFE890" opacity="0.6"/>
+  <circle cx="175" cy="380" r="3" fill="#FFE890" opacity="0.5"/>
+  <circle cx="258" cy="370" r="3" fill="#FFE890" opacity="0.5"/>
+  <!-- lights on below in village -->
+  <circle cx="100" cy="760" r="8" fill="#FFD060" opacity="0.6"/>
+  <circle cx="190" cy="780" r="6" fill="#FFD060" opacity="0.5"/>
+  <circle cx="280" cy="770" r="7" fill="#FFD060" opacity="0.6"/>
+  <circle cx="360" cy="755" r="6" fill="#FFD060" opacity="0.5"/>
+</svg>
+<div class="text-overlay" style="bottom:120px">
+  <div class="bubble-dark">
+    <p>A mochila estava completamente vazia. Todas as cartas entregues. Pip voou alto, alto, alto — livre como nunca.</p>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 24 -->
+<div class="page" id="page-24" style="background:#F0F5FF">
+<div class="illustration" style="height:58%">
+<svg viewBox="0 0 430 540" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="540" fill="#D8E0F8"/>
+  <!-- night sky, peaceful, soft -->
+  <rect x="0" y="0" width="430" height="300" fill="#C0CAEC"/>
+  <!-- gentle stars -->
+  <circle cx="40" cy="40" r="2" fill="#FFFAE0" opacity="0.8"/>
+  <circle cx="120" cy="25" r="1.5" fill="#FFFAE0" opacity="0.7"/>
+  <circle cx="250" cy="35" r="2.5" fill="#FFFAE0" opacity="0.9"/>
+  <circle cx="370" cy="50" r="1.8" fill="#FFFAE0" opacity="0.7"/>
+  <circle cx="80" cy="80" r="1.5" fill="#FFFAE0" opacity="0.6"/>
+  <circle cx="310" cy="70" r="2" fill="#FFFAE0" opacity="0.8"/>
+  <circle cx="170" cy="60" r="1.5" fill="#FFFAE0" opacity="0.6"/>
+  <!-- cloud home of Pip, glowing warmly -->
+  <ellipse cx="215" cy="250" rx="150" ry="95" fill="#F8F5FF"/>
+  <ellipse cx="95" cy="285" rx="90" ry="65" fill="#F8F5FF"/>
+  <ellipse cx="345" cy="275" rx="95" ry="68" fill="#F8F5FF"/>
+  <!-- warm window glow on cloud -->
+  <rect x="185" y="228" width="60" height="44" rx="8" fill="#FFE090" opacity="0.7"/>
+  <!-- cross window -->
+  <line x1="215" y1="228" x2="215" y2="272" stroke="#D0B060" stroke-width="1.5"/>
+  <line x1="185" y1="250" x2="245" y2="250" stroke="#D0B060" stroke-width="1.5"/>
+  <!-- little door -->
+  <rect x="200" y="282" width="30" height="38" rx="5" fill="#C09840"/>
+  <circle cx="226" cy="301" r="2.5" fill="#A07020"/>
+  <!-- flowers on cloud -->
+  <circle cx="155" cy="285" r="6" fill="#FFB0D0"/>
+  <circle cx="140" cy="295" r="5" fill="#FFD0A0"/>
+  <circle cx="278" cy="282" r="6" fill="#B0D0FF"/>
+  <circle cx="292" cy="292" r="5" fill="#FFD0A0"/>
+  <!-- Pip approaching home, from back view basically -->
+  <circle cx="215" cy="165" r="22" fill="#FFCF98"/>
+  <rect x="202" y="145" width="24" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="206" y="133" width="18" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- can't see face, going home direction -->
+  <ellipse cx="215" cy="190" rx="22" ry="25" fill="#FFD0A0"/>
+  <ellipse cx="190" cy="198" rx="20" ry="8" fill="#FFD0A0" transform="rotate(-20 190 198)"/>
+  <ellipse cx="240" cy="194" rx="20" ry="8" fill="#FFD0A0" transform="rotate(20 240 194)"/>
+  <ellipse cx="209" cy="213" rx="9" ry="5" fill="#4A90D9" transform="rotate(8 209 213)"/>
+  <ellipse cx="222" cy="215" rx="9" ry="5" fill="#4A90D9" transform="rotate(-8 222 215)"/>
+  <!-- empty bag, last delivery done -->
+  <ellipse cx="237" cy="192" rx="14" ry="17" fill="#D4A840" opacity="0.5"/>
+  <!-- ground soft hills -->
+  <ellipse cx="100" cy="380" rx="180" ry="100" fill="#8890C8"/>
+  <ellipse cx="340" cy="400" rx="200" ry="110" fill="#7880B8"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F0F5FF">
+  <p>Lá de longe, Pip já via a sua nuvem-casa, brilhando como um farolzinho no céu da noite.</p>
+  <p style="margin-top:10px">Tinha sido o melhor dia de trabalho de toda a sua vida de carteiro.</p>
+</div>
+</div>
+
+<!-- PAGE 25 -->
+<div class="page" id="page-25" style="background:#EEF0FF">
+<div class="illustration" style="height:56%">
+<svg viewBox="0 0 430 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="520" fill="#E0E8FF"/>
+  <!-- inside pip's cozy cloud home -->
+  <rect x="0" y="0" width="430" height="520" fill="#EEF0FF"/>
+  <!-- wall with starry wallpaper texture suggested -->
+  <circle cx="50" cy="50" r="2" fill="#C0C8F0" opacity="0.6"/>
+  <circle cx="100" cy="35" r="1.5" fill="#C0C8F0" opacity="0.6"/>
+  <circle cx="330" cy="45" r="2" fill="#C0C8F0" opacity="0.6"/>
+  <circle cx="400" cy="30" r="1.5" fill="#C0C8F0" opacity="0.6"/>
+  <circle cx="380" cy="80" r="1.5" fill="#C0C8F0" opacity="0.5"/>
+  <circle cx="60" cy="130" r="1.5" fill="#C0C8F0" opacity="0.5"/>
+  <!-- Pip's cozy window with curtains -->
+  <rect x="40" y="60" width="100" height="80" rx="6" fill="#FFE890" opacity="0.8"/>
+  <rect x="40" y="58" width="20" height="84" rx="3" fill="#F8C0B0" opacity="0.7"/>
+  <rect x="120" y="58" width="20" height="84" rx="3" fill="#F8C0B0" opacity="0.7"/>
+  <!-- moon visible through window -->
+  <circle cx="90" cy="100" r="20" fill="#FFF8D0" opacity="0.8"/>
+  <!-- Pip's little table with cup of tea and old letters he saved -->
+  <rect x="140" y="280" width="150" height="12" rx="4" fill="#C0A870"/>
+  <rect x="160" y="292" width="10" height="40" rx="3" fill="#C0A870"/>
+  <rect x="270" y="292" width="10" height="40" rx="3" fill="#C0A870"/>
+  <!-- tea cup -->
+  <ellipse cx="215" cy="268" rx="24" ry="16" fill="#C8E0F0"/>
+  <ellipse cx="215" cy="264" rx="24" ry="10" fill="#D8ECF8"/>
+  <ellipse cx="215" cy="260" rx="20" ry="7" fill="#FFECC0" opacity="0.8"/>
+  <path d="M239 270 Q248 266 242 278" stroke="#C8E0F0" stroke-width="3" fill="none"/>
+  <!-- steam -->
+  <path d="M207,257 Q202,245 208,238" stroke="#D0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M215,255 Q210,243 216,235" stroke="#D0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <path d="M223,257 Q218,245 224,238" stroke="#D0D8E8" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  <!-- a saved letter (a memory keepsake) -->
+  <g transform="rotate(-12 310 255)">
+    <rect x="290" y="242" width="40" height="30" rx="4" fill="#FFF8E8" stroke="#E0C090" stroke-width="1.5"/>
+    <path d="M290 242 L310 257 L330 242" stroke="#D0A860" stroke-width="1.2" fill="none"/>
+  </g>
+  <!-- Pip sitting contently in tiny armchair shape -->
+  <!-- chair -->
+  <ellipse cx="215" cy="420" rx="55" ry="24" fill="#F0D8C0"/>
+  <ellipse cx="158" cy="395" rx="12" ry="44" fill="#F0D8C0"/>
+  <ellipse cx="272" cy="395" rx="12" ry="44" fill="#F0D8C0"/>
+  <rect x="160" y="380" width="110" height="46" rx="10" fill="#F8E8D0"/>
+  <!-- pip resting in chair -->
+  <ellipse cx="215" cy="365" rx="20" ry="22" fill="#FFD0A0"/>
+  <circle cx="215" cy="338" r="20" fill="#FFCF98"/>
+  <rect x="203" y="320" width="22" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="207" y="308" width="16" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- sleepy happy eyes -->
+  <path d="M207 337 Q212 332 217 337" stroke="#3D2B1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M214 337 Q219 332 224 337" stroke="#3D2B1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- warm smile -->
+  <path d="M208 346 Q215 354 222 346" stroke="#A0603A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="203" cy="343" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="227" cy="343" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <!-- arms resting on armchair -->
+  <ellipse cx="189" cy="375" rx="18" ry="7" fill="#FFD0A0" transform="rotate(-5 189 375)"/>
+  <ellipse cx="241" cy="373" rx="18" ry="7" fill="#FFD0A0" transform="rotate(5 241 373)"/>
+  <!-- little hat on head tilted cozy -->
+  <ellipse cx="215" cy="320" rx="14" ry="4" fill="#4A90D9"/>
+  <rect x="213" y="307" width="13" height="15" rx="3" fill="#3A7BC8" transform="rotate(8 213 307)"/>
+</svg>
+</div>
+<div class="text-box" style="background:#EEF0FF">
+  <p>De volta em casa, Pip se afundou na poltrona quentinha com uma xícara de chá e ficou pensando em todos que tinham recebido uma carta hoje.</p>
+</div>
+</div>
+
+<!-- PAGE 26 -->
+<div class="page" id="page-26" style="background:#F5F0FF">
+<div class="illustration" style="height:52%">
+<svg viewBox="0 0 430 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="480" fill="#EAE4F8"/>
+  <!-- memory bubble collage feel - faces of all characters happily holding letters -->
+  <!-- big bubble 1: Bernardo bear happy with letter -->
+  <circle cx="110" cy="140" r="88" fill="#F8F4FF" stroke="#D0C8F0" stroke-width="1.5"/>
+  <!-- bear face small version -->
+  <circle cx="110" cy="118" r="36" fill="#C08848"/>
+  <circle cx="93" cy="98" r="13" fill="#C08848"/>
+  <circle cx="93" cy="98" r="8" fill="#A07040"/>
+  <circle cx="127" cy="98" r="13" fill="#C08848"/>
+  <circle cx="127" cy="98" r="8" fill="#A07040"/>
+  <ellipse cx="110" cy="128" rx="15" ry="11" fill="#D0A870"/>
+  <ellipse cx="110" cy="122" rx="6" ry="4.5" fill="#4A2A10"/>
+  <path d="M99 130 Q110 139 121 130" stroke="#4A2A10" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M101 113 Q105 108 110 113" stroke="#3D2010" stroke-width="2" fill="none"/>
+  <path d="M111 113 Q116 108 120 113" stroke="#3D2010" stroke-width="2" fill="none"/>
+  <circle cx="97" cy="124" r="7" fill="#FFB0A0" opacity="0.5"/>
+  <circle cx="123" cy="124" r="7" fill="#FFB0A0" opacity="0.5"/>
+  <!-- envelope in paws -->
+  <rect x="86" y="148" width="48" height="34" rx="5" fill="#FFFAEE"/>
+  <path d="M86 148 L110 165 L134 148" stroke="#D0A860" stroke-width="1.5" fill="none"/>
+  <!-- bubble 2: bee Bela top right -->
+  <circle cx="320" cy="140" r="85" fill="#FFFBF0" stroke="#F0E0A0" stroke-width="1.5"/>
+  <!-- bee face simple -->
+  <ellipse cx="320" cy="128" rx="28" ry="35" fill="#FFD020"/>
+  <rect x="295" y="118" width="50" height="9" rx="4.5" fill="#2A2A2A" opacity="0.6"/>
+  <rect x="295" y="135" width="50" height="9" rx="4.5" fill="#2A2A2A" opacity="0.6"/>
+  <circle cx="320" cy="96" r="24" fill="#FFD020"/>
+  <ellipse cx="310" cy="96" rx="4" ry="4.5" fill="#2A2A2A"/>
+  <ellipse cx="330" cy="96" rx="4" ry="4.5" fill="#2A2A2A"/>
+  <circle cx="312" cy="93.5" r="1.5" fill="#fff"/>
+  <circle cx="332" cy="93.5" r="1.5" fill="#fff"/>
+  <path d="M310 105 Q320 113 330 105" stroke="#4A2A10" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <ellipse cx="295" cy="108" rx="28" ry="15" fill="#C8F0FF" opacity="0.7" transform="rotate(-15 295 108)"/>
+  <ellipse cx="345" cy="108" rx="28" ry="15" fill="#C8F0FF" opacity="0.7" transform="rotate(15 345 108)"/>
+  <!-- honey pot -->
+  <ellipse cx="320" cy="158" rx="20" ry="22" fill="#F0C020"/>
+  <rect x="304" y="138" width="32" height="22" rx="7" fill="#F0C020"/>
+  <ellipse cx="320" cy="138" rx="16" ry="6" fill="#FFD840"/>
+  <!-- bubble 3: rabbit tobias bottom left -->
+  <circle cx="100" cy="360" r="75" fill="#F0F8FF" stroke="#C0D8F0" stroke-width="1.5"/>
+  <!-- rabbit simple face -->
+  <ellipse cx="85" cy="352" rx="6.5" ry="34" fill="#F0E8E0"/>
+  <ellipse cx="85" cy="352" rx="4" ry="26" fill="#FFD0D0"/>
+  <ellipse cx="115" cy="350" rx="6.5" ry="34" fill="#F0E8E0"/>
+  <ellipse cx="115" cy="350" rx="4" ry="26" fill="#FFD0D0"/>
+  <circle cx="100" cy="358" r="28" fill="#F0E8E0"/>
+  <ellipse cx="100" cy="369" rx="9" ry="6" fill="#FFB0A0"/>
+  <ellipse cx="91" cy="354" rx="3.5" ry="4" fill="#4A3020"/>
+  <ellipse cx="109" cy="354" rx="3.5" ry="4" fill="#4A3020"/>
+  <circle cx="92.5" cy="352.5" r="1.2" fill="#fff"/>
+  <circle cx="110.5" cy="352.5" r="1.2" fill="#fff"/>
+  <path d="M94 373 Q100 379 106 373" stroke="#8A5040" stroke-width="1.5" fill="none"/>
+  <!-- rabbit waving letter -->
+  <rect x="110" y="380" width="32" height="22" rx="4" fill="#FFFAEE"/>
+  <path d="M110 380 L126 391 L142 380" stroke="#D0A860" stroke-width="1.2" fill="none"/>
+  <!-- bubble 4: owl dulce bottom right -->
+  <circle cx="340" cy="352" r="78" fill="#FFF8F0" stroke="#E8D8C0" stroke-width="1.5"/>
+  <!-- owl face simple -->
+  <circle cx="340" cy="336" r="35" fill="#D0B878"/>
+  <ellipse cx="328" cy="332" rx="12" ry="13" fill="#FFFBE0"/>
+  <ellipse cx="352" cy="332" rx="12" ry="13" fill="#FFFBE0"/>
+  <ellipse cx="328" cy="332" rx="8" ry="9" fill="#D07010"/>
+  <ellipse cx="352" cy="332" rx="8" ry="9" fill="#D07010"/>
+  <ellipse cx="328" cy="332" rx="5" ry="6" fill="#2A1808"/>
+  <ellipse cx="352" cy="332" rx="5" ry="6" fill="#2A1808"/>
+  <circle cx="330" cy="329.5" r="2" fill="#fff"/>
+  <circle cx="354" cy="329.5" r="2" fill="#fff"/>
+  <polygon points="340,342 335,352 345,352" fill="#D0A020"/>
+  <!-- ear tufts -->
+  <polygon points="326,310 320,292 334,310" fill="#C0A868"/>
+  <polygon points="354,310 360,292 346,310" fill="#C0A868"/>
+  <!-- letter -->
+  <rect x="316" y="368" width="48" height="34" rx="5" fill="#FFFAEE"/>
+  <path d="M316 368 L340 384 L364 368" stroke="#D0A860" stroke-width="1.5" fill="none"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F5F0FF">
+  <p>O Urso Bernardo, a Abelha Bela, o Coelho Tobias, a Raposa Rô, o Porco-Espinho Pim, a Coruja Dulce...</p>
+  <p style="margin-top:10px">Todos tinham sorrido hoje por causa dele.</p>
+</div>
+</div>
+
+<!-- PAGE 27 -->
+<div class="page" id="page-27" style="background:#F0F4FF">
+<div class="illustration" style="height:57%">
+<svg viewBox="0 0 430 530" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect width="430" height="530" fill="#E4ECF8"/>
+  <!-- soft nighttime scene, Pip writing -->
+  <!-- desk lamp glow -->
+  <rect x="60" y="180" width="8" height="160" fill="#B09050"/>
+  <ellipse cx="100" cy="175" rx="52" ry="32" fill="#FFE890" opacity="0.6"/>
+  <ellipse cx="100" cy="175" rx="38" ry="22" fill="#FFD850" opacity="0.5"/>
+  <!-- desk -->
+  <rect x="30" y="340" width="200" height="12" rx="4" fill="#C0A870"/>
+  <rect x="50" y="352" width="10" height="44" rx="3" fill="#C0A870"/>
+  <rect x="200" y="352" width="10" height="44" rx="3" fill="#C0A870"/>
+  <!-- paper on desk, Pip writing a letter! -->
+  <rect x="60" y="295" width="120" height="48" rx="5" fill="#FFFAEE"/>
+  <!-- writing lines -->
+  <line x1="70" y1="310" x2="170" y2="310" stroke="#D8C090" stroke-width="1.5" opacity="0.8"/>
+  <line x1="70" y1="320" x2="160" y2="320" stroke="#D8C090" stroke-width="1.5" opacity="0.8"/>
+  <line x1="70" y1="330" x2="165" y2="330" stroke="#D8C090" stroke-width="1.5" opacity="0.8"/>
+  <!-- ink/pen -->
+  <line x1="168" y1="308" x2="175" y2="295" stroke="#5050A0" stroke-width="2" stroke-linecap="round"/>
+  <ellipse cx="168" cy="309" rx="3" ry="2" fill="#4040A0"/>
+  <!-- Pip sitting writing with big smile -->
+  <circle cx="215" cy="296" r="22" fill="#FFCF98"/>
+  <rect x="202" y="276" width="24" height="7" rx="3.5" fill="#4A90D9"/>
+  <rect x="206" y="264" width="18" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- focused writing expression -->
+  <ellipse cx="208" cy="295" rx="3.5" ry="3" fill="#3D2B1F"/>
+  <ellipse cx="222" cy="295" rx="3.5" ry="3" fill="#3D2B1F"/>
+  <circle cx="209.5" cy="293.5" r="1.2" fill="#fff"/>
+  <circle cx="223.5" cy="293.5" r="1.2" fill="#fff"/>
+  <!-- warm smile writing -->
+  <path d="M208 304 Q215 311 222 304" stroke="#A0603A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="203" cy="301" r="4.5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="227" cy="301" r="4.5" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="215" cy="320" rx="22" ry="24" fill="#FFD0A0"/>
+  <!-- arm writing motion -->
+  <ellipse cx="192" cy="326" rx="20" ry="8" fill="#FFD0A0" transform="rotate(-15 192 326)"/>
+  <!-- holding pen extended -->
+  <ellipse cx="245" cy="322" rx="20" ry="8" fill="#FFD0A0" transform="rotate(10 245 322)"/>
+  <!-- legs under desk -->
+  <ellipse cx="210" cy="342" rx="9" ry="5" fill="#4A90D9"/>
+  <ellipse cx="222" cy="343" rx="9" ry="5" fill="#4A90D9"/>
+  <!-- window showing night sky softly -->
+  <rect x="280" y="140" width="120" height="100" rx="8" fill="#C8D8F0"/>
+  <rect x="280" y="138" width="25" height="104" rx="3" fill="#E8D0C0" opacity="0.6"/>
+  <rect x="375" y="138" width="25" height="104" rx="3" fill="#E8D0C0" opacity="0.6"/>
+  <!-- stars in window -->
+  <circle cx="320" cy="165" r="2" fill="#FFFAE0"/>
+  <circle cx="350" cy="175" r="1.5" fill="#FFFAE0"/>
+  <circle cx="305" cy="190" r="1.5" fill="#FFFAE0"/>
+  <circle cx="368" cy="195" r="2" fill="#FFFAE0"/>
+  <circle cx="335" cy="210" r="1.5" fill="#FFFAE0"/>
+  <!-- moon in window -->
+  <circle cx="348" cy="165" r="16" fill="#FFF8D0" opacity="0.8"/>
+</svg>
+</div>
+<div class="text-box" style="background:#F0F4FF">
+  <p>Então Pip teve uma ideia. Ele pegou um papel branco e começou a escrever uma cartinha. Também era bom receber cartas... mas também era muito bom <em>escrever</em> para alguém que a gente gosta.</p>
+</div>
+</div>
+
+<!-- PAGE 28 (FINAL) -->
+<div class="page" id="page-28">
+<svg viewBox="0 0 430 932" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%">
+  <defs>
+    <radialGradient id="bgfinal" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#2A2058"/>
+      <stop offset="100%" stop-color="#0C0A28"/>
+    </radialGradient>
+  </defs>
+  <rect width="430" height="932" fill="url(#bgfinal)"/>
+  <!-- gentle starfield -->
+  <circle cx="40" cy="60" r="1.5" fill="#FFFAE0" opacity="0.7"/>
+  <circle cx="100" cy="30" r="1" fill="#FFFAE0" opacity="0.6"/>
+  <circle cx="200" cy="20" r="1.5" fill="#FFFAE0" opacity="0.8"/>
+  <circle cx="310" cy="40" r="1" fill="#FFFAE0" opacity="0.6"/>
+  <circle cx="390" cy="55" r="1.5" fill="#FFFAE0" opacity="0.7"/>
+  <circle cx="60" cy="150" r="1" fill="#FFFAE0" opacity="0.5"/>
+  <circle cx="380" cy="130" r="1.5" fill="#FFFAE0" opacity="0.6"/>
+  <circle cx="170" cy="100" r="1" fill="#FFFAE0" opacity="0.5"/>
+  <circle cx="250" cy="80" r="1.5" fill="#FFFAE0" opacity="0.7"/>
+  <circle cx="330" cy="120" r="1" fill="#FFFAE0" opacity="0.5"/>
+  <circle cx="80" cy="200" r="1" fill="#FFFAE0" opacity="0.4"/>
+  <circle cx="400" cy="220" r="1.5" fill="#FFFAE0" opacity="0.5"/>
+  <!-- big soft moon -->
+  <circle cx="215" cy="240" r="130" fill="#FFF8D0" opacity="0.07"/>
+  <circle cx="215" cy="240" r="100" fill="#FFF8D0" opacity="0.1"/>
+  <circle cx="215" cy="240" r="75" fill="#FFF8D0" opacity="0.12"/>
+  <!-- Pip small on his cloud home, letter box glowing -->
+  <!-- cloud big gentle -->
+  <ellipse cx="215" cy="430" rx="160" ry="100" fill="#E8E0F8" opacity="0.88"/>
+  <ellipse cx="90" cy="468" rx="95" ry="68" fill="#E8E0F8" opacity="0.88"/>
+  <ellipse cx="345" cy="460" rx="100" ry="72" fill="#E8E0F8" opacity="0.88"/>
+  <!-- letterbox on cloud glowing gold -->
+  <rect x="192" y="412" width="46" height="36" rx="5" fill="#F0C040"/>
+  <rect x="200" y="408" width="30" height="8" rx="4" fill="#D4A820"/>
+  <!-- slot -->
+  <rect x="200" y="426" width="30" height="5" rx="2" fill="#A07010"/>
+  <!-- glow around letterbox -->
+  <ellipse cx="215" cy="430" rx="40" ry="28" fill="#FFE090" opacity="0.25"/>
+  <!-- Pip on cloud, small, silhouetted but warm -->
+  <circle cx="215" cy="374" r="20" fill="#FFCF98"/>
+  <rect x="203" y="356" width="22" height="6.5" rx="3.5" fill="#4A90D9"/>
+  <rect x="207" y="344" width="16" height="14" rx="3" fill="#3A7BC8"/>
+  <!-- peaceful happy eyes -->
+  <path d="M208 373 Q213 367 218 373" stroke="#3D2B1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <path d="M213 373 Q218 367 223 373" stroke="#3D2B1F" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <!-- gentle smile -->
+  <path d="M208 382 Q215 390 222 382" stroke="#A0603A" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <circle cx="203" cy="379" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <circle cx="227" cy="379" r="5" fill="#FFB0A0" opacity="0.55"/>
+  <ellipse cx="215" cy="397" rx="20" ry="22" fill="#FFD0A0"/>
+  <!-- arms out at sides, relaxed -->
+  <ellipse cx="190" cy="400" rx="17" ry="7" fill="#FFD0A0" transform="rotate(-10 190 400)"/>
+  <ellipse cx="240" cy="398" rx="17" ry="7" fill="#FFD0A0" transform="rotate(10 240 398)"/>
+  <!-- the sent letter floating down towards the world below as a warm goodbye -->
+  <g transform="rotate(12 215 530) translate(215,530)">
+    <rect x="-20" y="-14" width="40" height="28" rx="4" fill="#FFFAEE" opacity="0.9"/>
+    <path d="M-20 -14 L0 0 L20 -14" stroke="#D0A860" stroke-width="1.2" fill="none"/>
+  </g>
+  <!-- village lights below, soft -->
+  <circle cx="80" cy="780" r="6" fill="#FFD060" opacity="0.4"/>
+  <circle cx="150" cy="800" r="5" fill="#FFD060" opacity="0.35"/>
+  <circle cx="240" cy="790" r="7" fill="#FFD060" opacity="0.4"/>
+  <circle cx="320" cy="808" r="5" fill="#FFD060" opacity="0.35"/>
+  <circle cx="380" cy="778" r="6" fill="#FFD060" opacity="0.4"/>
+  <!-- silhouette of forest -->
+  <ellipse cx="60" cy="850" rx="90" ry="120" fill="#0E0C22"/>
+  <ellipse cx="180" cy="860" rx="100" ry="130" fill="#0E0C22"/>
+  <ellipse cx="310" cy="855" rx="95" ry="125" fill="#0E0C22"/>
+  <ellipse cx="415" cy="845" rx="80" ry="110" fill="#0E0C22"/>
+  <!-- final title/end text block -->
+  <rect x="50" y="570" width="330" height="180" rx="20" fill="rgba(255,248,220,0.1)"/>
+  <text x="215" y="630" text-anchor="middle" font-size="15" fill="#C8AAEE" font-family="Nunito,sans-serif" font-weight="600">E Pip fechou os olhinhos contente,</text>
+  <text x="215" y="656" text-anchor="middle" font-size="15" fill="#C8AAEE" font-family="Nunito,sans-serif" font-weight="600">sabendo que amanhã teria mais cartas,</text>
+  <text x="215" y="682" text-anchor="middle" font-size="15" fill="#C8AAEE" font-family="Nunito,sans-serif" font-weight="600">mais amigos, mais sorrisos.</text>
+  <text x="215" y="720" text-anchor="middle" font-size="22" fill="#FFE8A0" font-family="Fredoka One,cursive">E isso era tudo de bom.</text>
+  <!-- decorative stars -->
+  <text x="90" y="738" font-size="14" fill="#FFE8A0" opacity="0.7" text-anchor="middle">✦</text>
+  <text x="215" y="748" font-size="14" fill="#FFE8A0" opacity="0.7" text-anchor="middle">✦</text>
+  <text x="340" y="738" font-size="14" fill="#FFE8A0" opacity="0.7" text-anchor="middle">✦</text>
+</svg>
+</div>
+
+</div><!-- /book -->
+</div><!-- /app -->
+
+<!-- Tap zones for navigation -->
+<div class="tap-prev" onclick="if(current>0) showPage(current-1,-1)" aria-label="Página anterior">
+  <div class="tap-arrow"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+</div>
+<div class="tap-next" onclick="if(current<TOTAL-1) showPage(current+1,1)" aria-label="Próxima página">
+  <div class="tap-arrow"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+</div>
+
+<!-- Progress dots -->
+<div id="dots"></div>
+
+<!-- Download button -->
+<button id="dl-btn" onclick="downloadPDF()">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+PDF
+</button>
+
+<script>
+const TOTAL = 29;
+const BOOK_TITLE = 'O Pequeno Carteiro das Nuvens';
+let current = 0;
+let startX = 0;
+let startY = 0;
+let dragging = false;
+let swipeLocked = false;
+
+// Inicializa: garante que só a página 0 está visível
+document.querySelectorAll('.page').forEach((p, i) => {
+  if(i === 0){
+    p.style.visibility = 'visible';
+    p.style.opacity    = '1';
+    p.style.transform  = 'translateX(0)';
+    p.classList.add('active');
+  } else {
+    p.style.visibility = 'hidden';
+    p.style.opacity    = '0';
+    p.style.transform  = 'translateX(0)';
+    p.classList.remove('active');
+  }
+  p.style.pointerEvents = i === 0 ? 'all' : 'none';
+});
+
+function getPage(n){ return document.getElementById('page-'+n) }
+
+let animating = false;
+
+function showPage(n, dir){
+  if(animating || n === current) return;
+  if(n < 0 || n >= TOTAL) return;
+  const outPage = getPage(current);
+  const inPage  = getPage(n);
+  if(!outPage || !inPage) return;
+  animating = true;
+
+  const dur = 340; // ms
+
+  // Posiciona a página entrante fora da tela (sem transição)
+  inPage.style.transition = 'none';
+  inPage.style.visibility = 'visible';
+  inPage.style.opacity    = '1';
+  inPage.style.transform  = dir > 0 ? 'translateX(100%)' : 'translateX(-100%)';
+  inPage.style.pointerEvents = 'none';
+
+  // Força reflow para aplicar o translateX inicial antes de animar
+  inPage.getBoundingClientRect();
+
+  // Ativa transição nas duas páginas
+  const transition = `transform ${dur}ms cubic-bezier(0.4,0,0.2,1)`;
+  outPage.style.transition = transition;
+  inPage.style.transition  = transition;
+
+  // Anima: saída desliza para fora, entrada desliza para dentro
+  outPage.style.transform = dir > 0 ? 'translateX(-100%)' : 'translateX(100%)';
+  inPage.style.transform  = 'translateX(0)';
+
+  setTimeout(()=>{
+    // Limpa a página que saiu
+    outPage.style.transition  = 'none';
+    outPage.style.transform   = 'translateX(0)';
+    outPage.style.visibility  = 'hidden';
+    outPage.style.opacity     = '0';
+    outPage.style.pointerEvents = 'none';
+    outPage.classList.remove('active');
+
+    // Confirma a página que entrou como ativa
+    inPage.style.transition   = 'none';
+    inPage.style.transform    = 'translateX(0)';
+    inPage.style.visibility   = 'visible';
+    inPage.style.opacity      = '1';
+    inPage.style.pointerEvents = 'all';
+    inPage.classList.add('active');
+
+    current = n;
+    animating = false;
+    updateDots();
+  }, dur + 20);
+}
+
+function updateDots(){
+  const dots = document.querySelectorAll('.dot');
+  dots.forEach((d,i)=>{ d.classList.toggle('active', i===current) });
+}
+
+// Build dots
+const dotContainer = document.getElementById('dots');
+for(let i=0;i<TOTAL;i++){
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' active':'');
+  dotContainer.appendChild(d);
+}
+
+// Touch/swipe — captura movimento para evitar interferência do scroll
+const book = document.getElementById('book');
+
+book.addEventListener('touchstart', e=>{
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+  dragging = true;
+  swipeLocked = false;
+},{passive:true});
+
+book.addEventListener('touchmove', e=>{
+  if(!dragging) return;
+  const dx = e.touches[0].clientX - startX;
+  const dy = e.touches[0].clientY - startY;
+  // Se movimento horizontal dominante, bloqueia scroll vertical
+  if(!swipeLocked && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10){
+    swipeLocked = true;
+    e.preventDefault();
+  }
+},{passive:false});
+
+book.addEventListener('touchend', e=>{
+  if(!dragging) return;
+  const dx = e.changedTouches[0].clientX - startX;
+  const dy = e.changedTouches[0].clientY - startY;
+  if(!animating && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2){
+    if(dx < 0 && current < TOTAL-1) showPage(current+1, 1);
+    else if(dx > 0 && current > 0) showPage(current-1, -1);
+  }
+  dragging = false;
+  swipeLocked = false;
+},{passive:true});
+
+// Mouse swipe
+book.addEventListener('mousedown', e=>{ startX=e.clientX; dragging=true; });
+book.addEventListener('mousemove', e=>{ /* only track */ });
+book.addEventListener('mouseup', e=>{
+  if(!dragging) return;
+  const dx = e.clientX - startX;
+  if(!animating && Math.abs(dx)>50){
+    if(dx<0 && current < TOTAL-1) showPage(current+1, 1);
+    else if(dx>0 && current > 0) showPage(current-1, -1);
+  }
+  dragging=false;
+});
+
+// Keyboard
+document.addEventListener('keydown', e=>{
+  if(animating) return;
+  if(e.key==='ArrowRight' && current<TOTAL-1) showPage(current+1,1);
+  if(e.key==='ArrowLeft' && current>0) showPage(current-1,-1);
+});
+
+// Download button hide
+let dlHidden = false;
+const dlBtn = document.getElementById('dl-btn');
+function hideDlBtn(){
+  if(dlHidden) return;
+  dlHidden = true;
+  dlBtn.style.display='none';
+}
+
+// PDF download
+function downloadPDF(){
+  // Create a printable version message since jsPDF in this context
+  const info = `${BOOK_TITLE}\n\nPara salvar em PDF:\n1. Use Ctrl+P (ou Cmd+P no Mac)\n2. Escolha "Salvar como PDF"\n3. Configure para orientação retrato`;
+  alert(info);
+}
+
+// Optional: long-press dl button to hide
+dlBtn.addEventListener('contextmenu', e=>{ e.preventDefault(); hideDlBtn(); });
+</script>
+</body>
+</html>
