@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aurumserah.online/sitemap.xml
+Sitemap: https://www.aurumserah.online/sitemap.xml
