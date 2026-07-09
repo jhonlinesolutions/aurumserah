@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -160,7 +161,7 @@
   }
   .hero h1{
     font-family:'Playfair Display', serif; font-weight:600;
-    font-size:clamp(3rem, 11vw, 6rem); line-height:0.98; margin:0;
+    font-size:clamp(2.3rem, 7.6vw, 3.8rem); line-height:1.08; margin:0;
     color:var(--parchment);
     letter-spacing:0.01em;
   }
@@ -170,8 +171,12 @@
   }
   .hero-sub{
     font-family:'Cormorant Garamond', serif; font-style:italic;
-    font-size:clamp(1.3rem, 5.4vw, 1.5rem); color:var(--muted);
-    max-width:42ch; margin:28px auto 0; line-height:1.6;
+    font-size:clamp(1.25rem, 4.6vw, 1.45rem); color:var(--muted);
+    max-width:52ch; margin:26px auto 0; line-height:1.6;
+  }
+  .hero-micro{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.06em;
+    color:var(--muted); opacity:0.85; margin:16px auto 0; max-width:44ch; line-height:1.7;
   }
   .hero-cta{
     display:inline-flex; align-items:center; gap:10px; margin-top:44px;
@@ -311,6 +316,158 @@
     color:var(--gold-deep); opacity:0.75; margin:4px 0;
   }
 
+  /* ---------- Problem ---------- */
+  .problem{
+    max-width:var(--maxtext); margin:0 auto; padding:20px 28px 80px; text-align:center;
+  }
+  .problem .label{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.3em;
+    text-transform:uppercase; color:var(--ember); margin-bottom:22px;
+  }
+  .problem p{
+    font-size:clamp(1.4rem, 6vw, 1.55rem); line-height:1.6; color:var(--parchment);
+    margin:0 0 1.2em; text-align:left; font-weight:500;
+  }
+  .problem p.punch{
+    font-family:'Playfair Display', serif; font-style:italic; font-weight:600;
+    color:var(--gold); text-align:center; font-size:clamp(1.5rem, 6vw, 1.8rem);
+    margin:1.4em 0;
+  }
+
+  /* ---------- Solution (livros narrativa) ---------- */
+  .solution{ max-width:var(--max); margin:0 auto; padding:0 24px 100px; }
+  .solution-head{ text-align:center; margin-bottom:56px; max-width:var(--maxtext); margin-left:auto; margin-right:auto; }
+  .solution-head .label{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.3em;
+    text-transform:uppercase; color:var(--gold-deep); margin-bottom:18px;
+  }
+  .solution-head p{
+    font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--muted);
+    font-size:clamp(1.2rem, 4.6vw, 1.4rem); line-height:1.6; margin:0;
+  }
+  .book-block{
+    max-width:var(--maxtext); margin:0 auto 56px; padding-bottom:44px;
+    border-bottom:1px solid var(--rule);
+  }
+  .book-block:last-of-type{ border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .book-block h3{
+    font-family:'Playfair Display', serif; font-weight:600; color:var(--gold);
+    font-size:clamp(1.4rem, 5vw, 1.7rem); margin:0 0 6px;
+  }
+  .book-block .book-lede{
+    font-style:italic; color:var(--muted); font-size:clamp(1.1rem, 4.4vw, 1.25rem);
+    margin:0 0 16px;
+  }
+  .book-block p{ font-size:clamp(1.1rem, 4.4vw, 1.22rem); line-height:1.65; color:var(--parchment); margin:0 0 14px; text-align:left; }
+  .book-block .for-who{
+    font-family:'Montserrat', sans-serif; font-size:12.5px; letter-spacing:0.02em;
+    color:var(--gold-deep); text-align:left; margin:0; line-height:1.6;
+  }
+  .book-block .for-who strong{ color:var(--gold); text-transform:uppercase; letter-spacing:0.14em; font-size:11px; }
+  .diff-list{
+    max-width:var(--maxtext); margin:0 auto; list-style:none; padding:0; text-align:left;
+  }
+  .diff-list li{
+    font-size:clamp(1.05rem, 4.2vw, 1.18rem); color:var(--muted); line-height:1.6;
+    padding-left:28px; position:relative; margin-bottom:12px;
+  }
+  .diff-list li::before{
+    content:'✦'; position:absolute; left:0; top:1px; color:var(--gold); font-size:0.9em;
+  }
+
+  /* ---------- Benefits ---------- */
+  .benefits{ max-width:var(--maxtext); margin:0 auto; padding:0 28px 100px; }
+  .benefits .label{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.3em;
+    text-transform:uppercase; color:var(--gold-deep); margin-bottom:26px; text-align:center;
+  }
+  .benefits ul{ list-style:none; padding:0; margin:0; }
+  .benefits li{
+    display:flex; gap:14px; align-items:flex-start;
+    font-size:clamp(1.1rem, 4.4vw, 1.25rem); color:var(--parchment); line-height:1.6;
+    margin-bottom:18px; text-align:left;
+  }
+  .benefits li .check{ color:var(--gold); flex-shrink:0; font-size:1.1em; margin-top:2px; }
+
+  /* ---------- Offer ---------- */
+  .offer{
+    max-width:var(--maxtext); margin:0 auto; padding:0 24px 120px; text-align:center;
+  }
+  .offer .label{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.3em;
+    text-transform:uppercase; color:var(--ember); margin-bottom:18px;
+  }
+  .offer > p{
+    font-size:clamp(1.2rem, 4.6vw, 1.35rem); color:var(--muted); line-height:1.6;
+    margin:0 0 40px; font-style:italic;
+  }
+  .value-stack{
+    width:100%; border-collapse:collapse; margin:0 0 32px;
+    background:var(--panel); border:1px solid var(--rule); border-radius:14px; overflow:hidden;
+  }
+  .value-stack td{
+    padding:16px 20px; font-size:1.05rem; color:var(--parchment); border-bottom:1px solid var(--rule);
+    text-align:left;
+  }
+  .value-stack tr:last-child td{ border-bottom:none; }
+  .value-stack td.price{ text-align:right; font-family:'Montserrat', sans-serif; color:var(--muted); white-space:nowrap; }
+  .value-stack tr.total td{ font-weight:600; color:var(--muted); }
+  .value-stack tr.total td.price{ text-decoration:line-through; opacity:0.7; }
+  .offer-price{
+    font-family:'Playfair Display', serif; font-weight:600; color:var(--gold);
+    font-size:clamp(2.2rem, 9vw, 3rem); margin:0 0 6px;
+  }
+  .offer-price-label{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 36px;
+  }
+  .guarantee{
+    display:flex; gap:14px; align-items:flex-start; text-align:left;
+    background:var(--panel); border:1px solid var(--rule); border-radius:14px;
+    padding:22px 24px; margin:0 0 40px;
+  }
+  .guarantee .shield{ font-size:1.6rem; flex-shrink:0; }
+  .guarantee p{ margin:0; font-size:1.02rem; color:var(--muted); line-height:1.6; }
+  .guarantee strong{ color:var(--gold); }
+  .offer-cta{
+    display:inline-flex; align-items:center; gap:10px;
+    font-family:'Montserrat', sans-serif; font-size:12px; letter-spacing:0.22em;
+    text-transform:uppercase; color:var(--void); background:linear-gradient(135deg, var(--gold-bright), var(--gold-deep));
+    padding:16px 34px; border-radius:999px; text-decoration:none;
+    box-shadow:0 10px 30px rgba(231,190,100,0.18);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .offer-cta:hover{ transform:translateY(-2px); box-shadow:0 14px 36px rgba(231,190,100,0.28); }
+  .offer-micro{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.06em;
+    color:var(--muted); opacity:0.85; margin:16px 0 0;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq{ max-width:var(--maxtext); margin:0 auto; padding:0 24px 120px; }
+  .faq .label{
+    font-family:'Montserrat', sans-serif; font-size:11px; letter-spacing:0.3em;
+    text-transform:uppercase; color:var(--gold-deep); margin-bottom:26px; text-align:center;
+  }
+  .faq details{
+    border-bottom:1px solid var(--rule); padding:20px 0;
+  }
+  .faq details:first-of-type{ border-top:1px solid var(--rule); }
+  .faq summary{
+    cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:16px;
+    font-family:'Playfair Display', serif; font-weight:600; color:var(--parchment);
+    font-size:clamp(1.05rem, 4.2vw, 1.2rem);
+  }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{
+    content:'+'; color:var(--gold); font-size:1.4rem; flex-shrink:0; transition:transform .2s ease;
+  }
+  .faq details[open] summary::after{ content:'–'; }
+  .faq details p{
+    font-size:clamp(1rem, 4vw, 1.12rem); color:var(--muted); line-height:1.65;
+    margin:14px 0 0; text-align:left;
+  }
+
   @media (min-width: 720px){
     .hero{ padding:160px 24px 100px; }
   }
@@ -354,13 +511,22 @@
       </svg>
     </div>
     <div class="hero-content">
-      <p class="hero-eyebrow">Coleção Despertada 777</p>
-      <h1>Aurum Serah</h1>
-      <span class="signature">histórias que atravessam, curam e libertam</span>
-      <p class="hero-sub">Cada livro é uma travessia real — de dor, perdão e despertar — escrita para quem também está atravessando a sua.</p>
-      <a href="#produtos" class="hero-cta">Ver os livros</a>
+      <p class="hero-eyebrow">Aurum Serah · Coleção Despertada 777</p>
+      <h1>Você não está perdida.<br>Você está no meio da travessia.</h1>
+      <p class="hero-sub">Três histórias reais de mulheres que atravessaram a dor, o silêncio e a reconstrução — escritas para serem lidas em poucas noites, não em meses. Você não precisa de mais uma teoria. Precisa de um espelho.</p>
+      <a href="#produtos" class="hero-cta">🔥 Quero Começar Minha Travessia Agora</a>
+      <p class="hero-micro">Acesso imediato na área de membros · Leia no celular, tablet ou computador · Sem mensalidade</p>
     </div>
     <div class="scroll-cue" aria-hidden="true"></div>
+  </section>
+
+  <section class="problem">
+    <p class="label">Se você chegou até aqui, talvez se reconheça em algo disso</p>
+    <p>Você acorda funcionando. Dá conta de tudo — da casa, dos filhos, do trabalho, das cobranças que ninguém vê. Por fora, está de pé. Por dentro, tem dias em que nem reconhece quem virou.</p>
+    <p>Você já tentou "dar a volta por cima" sozinha. Já leu frases motivacionais, já se prometeu recomeçar, já disse "semana que vem eu cuido de mim" um número de vezes que nem lembra mais.</p>
+    <p class="punch">Será que essa versão cansada de mim é a versão definitiva — ou existe alguém mais forte, mais inteira, tentando voltar à tona?</p>
+    <p>Essa pergunta não se responde com mais uma lista de tarefas de autocuidado. Ela se responde com histórias reais de quem já atravessou esse mesmo deserto — e tem estrada suficiente andada pra te mostrar o caminho de volta pra você mesma.</p>
+    <p>É exatamente isso que Aurum Serah escreveu nos livros da coleção Despertada 777.</p>
   </section>
 
   <section class="about">
@@ -379,6 +545,52 @@
 <p>Cada livro representa uma etapa dessa jornada.</p>
 <p>Cada leitor passa a fazer parte dela.</p>
 <p>---</p>
+  </section>
+
+  <section class="solution">
+    <div class="solution-head">
+      <p class="label">A Coleção Despertada 777</p>
+      <p>Não são manuais de autoajuda genéricos. São relatos e reflexões nascidos de travessias reais — maternidade, casamento, perdão, ruptura e reconstrução — escritos para que você não precise atravessar sozinha o que já foi atravessado por outra mulher antes de você.</p>
+    </div>
+
+    <div class="book-block">
+      <h3>📖 Travessia de Saray</h3>
+      <p class="book-lede">Pelas mãos de uma mãe... pelo coração de uma filha da Terra.</p>
+      <p>Uma história real de força, perdão e propósito. Saray narra as raízes que a formaram, o casamento que prometia um futuro e revelou uma ilusão, a maternidade que a trouxe de volta para si mesma, e o momento exato em que escolheu — de forma silenciosa e definitiva — parar de se abandonar.</p>
+      <p class="for-who"><strong>Para quem é</strong><br>Mulheres que sentem que se perderam de si mesmas dentro de um relacionamento, de uma rotina ou de uma versão antiga que já não cabe mais.</p>
+    </div>
+
+    <div class="book-block">
+      <h3>🔥 O Perdão é um Fogo Sagrado</h3>
+      <p>Um mergulho na dor que insiste em não passar com o tempo — e na diferença entre sobreviver a uma mágoa e efetivamente se libertar dela. Perdoar aqui não é sinônimo de esquecer ou de concordar: é o processo, por vezes dolorido, de parar de dar ao passado o poder de decidir o seu presente.</p>
+      <p class="for-who"><strong>Para quem é</strong><br>Quem carrega uma mágoa — com alguém ou consigo mesma — que já devia ter ficado para trás, mas continua pesando no dia a dia.</p>
+    </div>
+
+    <div class="book-block">
+      <h3>🔑 21 Chaves do Despertar</h3>
+      <p>Vinte e uma reflexões objetivas para reconectar decisão, consciência e ação no cotidiano — pensadas para quem já entendeu que precisa mudar, mas não sabe por onde recomeçar.</p>
+      <p class="for-who"><strong>Para quem é</strong><br>Quem já teve o "estalo" de que algo precisa mudar, mas precisa de direção prática pra transformar essa consciência em passos reais.</p>
+    </div>
+
+    <p class="label" style="text-align:center; margin:0 0 20px;">Por que esses livros são diferentes de "mais um livro de autoajuda"</p>
+    <ul class="diff-list">
+      <li>Não são fórmulas prontas — são travessias reais, contadas por quem viveu.</li>
+      <li>Linguagem direta, sem jargão espiritual vazio.</li>
+      <li>Formato enxuto: dá pra terminar em poucas sessões de leitura, não em semanas.</li>
+    </ul>
+  </section>
+
+  <section class="benefits">
+    <p class="label">O que muda pra você depois dessas leituras</p>
+    <ul>
+      <li><span class="check">✅</span>Você para de se culpar por sentir o que sente — e entende que a dor que carrega faz parte de um processo, não de um defeito seu.</li>
+      <li><span class="check">✅</span>Você aprende a diferença entre sobreviver e viver — e reconhece em qual dos dois modos está funcionando hoje.</li>
+      <li><span class="check">✅</span>Você entende, de forma concreta, como perdoar sem precisar fingir que nada aconteceu.</li>
+      <li><span class="check">✅</span>Você recupera a clareza pra tomar decisões que já vinha adiando por medo, culpa ou cansaço.</li>
+      <li><span class="check">✅</span>Você para de negociar quem é pra caber em relações ou rotinas que já não fazem sentido.</li>
+      <li><span class="check">✅</span>Você sai da leitura com linguagem própria pra nomear o que vive — o primeiro passo real pra qualquer mudança.</li>
+      <li><span class="check">✅</span>Você lê em qualquer lugar, no seu tempo — direto na área de membros, sem precisar reservar hora marcada.</li>
+    </ul>
   </section>
 
   <section class="products" id="produtos">
@@ -447,6 +659,75 @@
       </article>
 
     </div>
+  </section>
+
+  <section class="offer" id="oferta">
+    <p class="label">Sua travessia começa com um único passo</p>
+    <p>Hoje você pode levar a Trilogia Despertada 777 completa — Travessia de Saray + O Perdão é um Fogo Sagrado + 21 Chaves do Despertar — por um valor muito menor do que comprar os três separadamente.</p>
+
+    <table class="value-stack">
+      <tr>
+        <td>Travessia de Saray (e-book)</td>
+        <td class="price">R$ 19</td>
+      </tr>
+      <tr>
+        <td>O Perdão é um Fogo Sagrado (e-book)</td>
+        <td class="price">R$ 29</td>
+      </tr>
+      <tr>
+        <td>21 Chaves do Despertar (e-book)</td>
+        <td class="price">R$ 47</td>
+      </tr>
+      <tr class="total">
+        <td>Total avulso</td>
+        <td class="price">R$ 95</td>
+      </tr>
+    </table>
+
+    <p class="offer-price">R$ 79,90</p>
+    <p class="offer-price-label">Seu investimento hoje na Trilogia completa</p>
+
+    <div class="guarantee">
+      <span class="shield">🛡️</span>
+      <p><strong>Garantia incondicional de 7 dias.</strong> Se você abrir os livros e sentir que não é para você, é só pedir o reembolso dentro de 7 dias — sem perguntas, sem burocracia. O risco é todo nosso.</p>
+    </div>
+
+    <a href="#produtos" class="offer-cta">🔥 Quero Despertar Meu Potencial Agora</a>
+    <p class="offer-micro">Pagamento seguro · Acesso imediato após a confirmação · Garantia de 7 dias</p>
+  </section>
+
+  <section class="faq">
+    <p class="label">Perguntas frequentes</p>
+
+    <details>
+      <summary>Não tenho tempo para ler um livro inteiro.</summary>
+      <p>Os livros da coleção foram escritos justamente para quem não tem tempo sobrando. Você não precisa terminar em um fim de semana — pode ler um capítulo por noite, em 10 a 15 minutos, e ainda assim sentir a transformação acontecendo aos poucos. Não é sobre terminar rápido. É sobre começar hoje.</p>
+    </details>
+
+    <details>
+      <summary>Já tentei terapia, livros e outras práticas e não funcionou pra mim.</summary>
+      <p>Faz sentido sentir esse receio — e ele é exatamente o motivo pelo qual esses livros não são "mais uma fórmula". São travessias reais, não promessas de solução instantânea. Eles não substituem terapia quando ela é necessária; eles servem como espelho e ponto de partida para quem quer se reconhecer antes de saber por onde começar a mudar.</p>
+    </details>
+
+    <details>
+      <summary>Será que isso funciona pra mim, pro meu momento de vida?</summary>
+      <p>Se você já sentiu, mesmo que por um instante, que está funcionando por fora mas desconectada por dentro, esses livros foram escritos pensando em você. Eles não prometem uma fórmula universal; contam histórias reais o suficiente para que você se reconheça em pelo menos uma delas.</p>
+    </details>
+
+    <details>
+      <summary>Como recebo o acesso? Dá pra ler no celular?</summary>
+      <p>Sim. O acesso é liberado na área de membros da Kiwify, direto no navegador do celular, tablet ou computador, no seu tempo — sem precisar instalar nenhum aplicativo ou baixar arquivos.</p>
+    </details>
+
+    <details>
+      <summary>E se eu comprar e não gostar?</summary>
+      <p>Você tem 7 dias de garantia incondicional. Se sentir que não é pra você, o reembolso é simples e sem perguntas.</p>
+    </details>
+
+    <details>
+      <summary>Posso comprar só um livro, ou preciso levar a trilogia completa?</summary>
+      <p>Você pode comprar qualquer um dos três livros separadamente, ou levar a Trilogia Despertada 777 completa por um valor menor do que a soma das compras avulsas — a economia fica em R$ 15,10.</p>
+    </details>
   </section>
 
   <footer class="site-footer">
