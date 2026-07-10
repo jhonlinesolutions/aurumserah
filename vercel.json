@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/livros/:book/:token", "destination": "/api/livros/:book/:token" }
+  ]
+}
