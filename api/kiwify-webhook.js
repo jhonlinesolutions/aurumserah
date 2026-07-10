@@ -19,6 +19,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 // a Trilogia aponta pros 3.
 // ============================================================
 const PRODUCT_MAP = {
+  '4a3c4b2f-d06c-40c6-9754-f4ba11a5143f': ['travessia-de-saray'], // TEMPORÁRIO - remover depois do teste
   '5ee20530-7963-11f1-9e23-ff1f234c7630': ['travessia-de-saray'],
   '51e4c6d0-799d-11f1-943e-2b460b88104a': ['o-perdao-e-um-fogo-sagrado'],
   '016b0d70-799f-11f1-9e25-9f8bec3d92fc': ['21-chaves-do-despertar'],
