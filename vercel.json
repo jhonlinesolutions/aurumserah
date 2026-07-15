@@ -1,5 +1,10 @@
 {
   "rewrites": [
     { "source": "/livros/:book/:token", "destination": "/api/livros/:book/:token" }
-  ]
+  ],
+  "functions": {
+    "api/livros/[book]/[token].js": {
+      "includeFiles": "api/_content/**"
+    }
+  }
 }
